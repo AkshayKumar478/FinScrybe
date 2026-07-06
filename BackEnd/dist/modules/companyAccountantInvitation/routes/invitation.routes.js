@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = require("../../../common/middlewares/auth.middleware");
+const role_middleware_1 = require("../../../common/middlewares/role.middleware");
+const validate_middleware_1 = require("../../../common/middlewares/validate.middleware");
+const types_1 = require("../../../common/types");
+const invitation_controller_1 = require("../controllers/invitation.controller");
+const invitation_validation_1 = require("../validators/invitation.validation");
+const invitationRouter = (0, express_1.Router)();
+invitationRouter.post("/", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(types_1.ActorType.COMPANY_ADMIN), (0, validate_middleware_1.validateMiddleware)({ body: invitation_validation_1.createInvitationSchema }), invitation_controller_1.invitationController.createInvitation.bind(invitation_controller_1.invitationController));
+invitationRouter.get("/validate", (0, validate_middleware_1.validateMiddleware)({ query: invitation_validation_1.validateInvitationQuerySchema }), invitation_controller_1.invitationController.validateInvitation.bind(invitation_controller_1.invitationController));
+invitationRouter.post("/:invitationId/resend", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(types_1.ActorType.COMPANY_ADMIN), (0, validate_middleware_1.validateMiddleware)({ params: invitation_validation_1.resendInvitationParamsSchema }), invitation_controller_1.invitationController.resendInvitation.bind(invitation_controller_1.invitationController));
+invitationRouter.post("/accept", (0, validate_middleware_1.validateMiddleware)({ body: invitation_validation_1.acceptInvitationSchema }), invitation_controller_1.invitationController.acceptInvitation.bind(invitation_controller_1.invitationController));
+exports.default = invitationRouter;

@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const accountant_routes_1 = __importDefault(require("../modules/companyAccountant/routes/accountant.routes"));
+const admin_routes_1 = __importDefault(require("../modules/admin/routes/admin.routes"));
+const auth_routes_1 = __importDefault(require("../modules/auth/routes/auth.routes"));
+const company_routes_1 = __importDefault(require("../modules/company/routes/company.routes"));
+const companyAdmin_routes_1 = __importDefault(require("../modules/companyAdmin/routes/companyAdmin.routes"));
+const companyAdminInvitation_routes_1 = __importDefault(require("../modules/companyAdminInvitation/routes/companyAdminInvitation.routes"));
+const invitation_routes_1 = __importDefault(require("../modules/companyAccountantInvitation/routes/invitation.routes"));
+const passwordReset_routes_1 = __importDefault(require("../modules/passwordReset/routes/passwordReset.routes"));
+const router = (0, express_1.Router)();
+router.use("/auth", auth_routes_1.default);
+router.use("/admins", admin_routes_1.default);
+router.use("/companies", company_routes_1.default);
+router.use("/company-admins", companyAdmin_routes_1.default);
+router.use("/company-admin-invitations", companyAdminInvitation_routes_1.default);
+router.use("/accountants", accountant_routes_1.default);
+router.use("/invitations", invitation_routes_1.default);
+router.use("/password", passwordReset_routes_1.default);
+exports.default = router;

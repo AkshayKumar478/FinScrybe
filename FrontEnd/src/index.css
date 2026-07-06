@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-finscrybe-primary: #635BFF;
+  --color-finscrybe-hover: #5448F7;
+  --color-finscrybe-bg: #F8FAFC;
+  --color-finscrybe-text: #111827;
+  --color-finscrybe-muted: #6B7280;
+  --color-finscrybe-border: #E5E7EB;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-finscrybe-bg text-finscrybe-text font-sans antialiased min-h-screen;
+  }
+}
+

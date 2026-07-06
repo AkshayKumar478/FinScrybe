@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const validate_middleware_1 = require("../../../common/middlewares/validate.middleware");
+const auth_controller_1 = require("../controllers/auth.controller");
+const auth_validation_1 = require("../validators/auth.validation");
+const authRouter = (0, express_1.Router)();
+authRouter.post("/super-admin/login", (0, validate_middleware_1.validateMiddleware)({ body: auth_validation_1.superAdminLoginSchema }), auth_controller_1.authController.loginSuperAdmin.bind(auth_controller_1.authController));
+authRouter.post("/company/register", (0, validate_middleware_1.validateMiddleware)({ body: auth_validation_1.companyRegistrationSchema }), auth_controller_1.authController.registerCompany.bind(auth_controller_1.authController));
+authRouter.post("/company-admin/login", (0, validate_middleware_1.validateMiddleware)({ body: auth_validation_1.companyAdminLoginSchema }), auth_controller_1.authController.loginCompanyAdmin.bind(auth_controller_1.authController));
+authRouter.post("/accountant/login", (0, validate_middleware_1.validateMiddleware)({ body: auth_validation_1.accountantLoginSchema }), auth_controller_1.authController.loginAccountant.bind(auth_controller_1.authController));
+exports.default = authRouter;
