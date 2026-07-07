@@ -16,6 +16,9 @@ class CompanyAdminRepository extends base_repository_1.BaseRepository {
     async findByCompanyId(companyId) {
         return this.findMany({ companyId });
     }
+    async findAll() {
+        return this.findMany();
+    }
     async findPrimaryByCompanyId(companyId) {
         return this.findOne({ companyId, isPrimaryAdmin: true });
     }

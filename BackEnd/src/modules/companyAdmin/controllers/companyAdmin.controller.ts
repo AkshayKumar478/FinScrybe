@@ -48,7 +48,7 @@ class CompanyAdminController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const response = await companyAdminService.listByCompany(req.params.companyId);
+      const response = await companyAdminService.listByCompany(req.params.companyId as string);
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -68,7 +68,7 @@ class CompanyAdminController {
       const response = await companyAdminService.updateStatus(
         req.user.actorType,
         req.user.id,
-        req.params.companyAdminId,
+        req.params.companyAdminId as string,
         req.body.isActive
       );
 

@@ -13,6 +13,7 @@ const email_1 = require("../../../common/utils/email");
 const token_1 = require("../../../common/utils/token");
 const company_repository_1 = require("../../company/repositories/company.repository");
 const companyAdmin_repository_1 = require("../../companyAdmin/repositories/companyAdmin.repository");
+const invitation_mapper_1 = require("../mappers/invitation.mapper");
 const INVITATION_EXPIRY_HOURS = 48;
 class SharedInvitationService {
     constructor(inviterRepository, companyReader) {
@@ -30,18 +31,11 @@ class SharedInvitationService {
         const expiresAt = this.buildExpiryDate();
         const invitation = await repository.create(config.createInvitationPayload(inviter, payload, token, expiresAt));
         await this.sendInvitationEmail(invitation.email, config.invitationLabel, token, expiresAt, config.invitationDetails(invitation).summary);
-        return {
-            message: `${config.invitationLabel} invitation sent successfully`,
-            invitation: this.formatInvitation(invitation),
-        };
+        return (0, invitation_mapper_1.mapInvitationMessageResponse)(`${config.invitationLabel} invitation sent successfully`, invitation);
     }
     async validateInvitation(token, repository, config) {
         const invitation = await this.requireValidInvitation(token, repository);
-        return {
-            message: `${config.invitationLabel} invitation is valid`,
-            invitation: this.formatInvitation(invitation),
-            details: config.invitationDetails(invitation),
-        };
+        return (0, invitation_mapper_1.mapInvitationValidationResponse)(`${config.invitationLabel} invitation is valid`, invitation, config.invitationDetails(invitation));
     }
     async resendInvitation(inviterId, invitationId, repository, config) {
         const inviter = await this.requireInviter(inviterId);
@@ -60,10 +54,7 @@ class SharedInvitationService {
             throw new AppError_1.AppError(`Failed to resend ${config.invitationLabel.toLowerCase()} invitation`);
         }
         await this.sendInvitationEmail(refreshedInvitation.email, config.invitationLabel, token, expiresAt, config.invitationDetails(refreshedInvitation).summary);
-        return {
-            message: `${config.invitationLabel} invitation resent successfully`,
-            invitation: this.formatInvitation(refreshedInvitation),
-        };
+        return (0, invitation_mapper_1.mapInvitationMessageResponse)(`${config.invitationLabel} invitation resent successfully`, refreshedInvitation);
     }
     async acceptInvitation(payload, repository, config) {
         const invitation = await this.requireValidInvitation(payload.token, repository);
@@ -76,10 +67,7 @@ class SharedInvitationService {
                 createdAccount = await config.createAccount(invitation, payload, hashedPassword, session);
                 await repository.updateStatus(invitation._id.toString(), types_1.InvitationStatus.ACCEPTED, new Date(), { session, new: true });
             });
-            return {
-                message: `${config.invitationLabel} invitation accepted successfully`,
-                account: createdAccount,
-            };
+            return (0, invitation_mapper_1.mapInvitationAcceptanceResponse)(`${config.invitationLabel} invitation accepted successfully`, createdAccount);
         }
         finally {
             await session.endSession();
@@ -133,14 +121,6 @@ class SharedInvitationService {
         <p>This invitation expires on ${expiresAt.toISOString()}.</p>
         <p><a href="${invitationLink}">Accept invitation</a></p>
       `);
-    }
-    formatInvitation(invitation) {
-        return {
-            id: invitation._id.toString(),
-            email: invitation.email,
-            status: invitation.status,
-            expiresAt: invitation.expiresAt,
-        };
     }
 }
 exports.SharedInvitationService = SharedInvitationService;

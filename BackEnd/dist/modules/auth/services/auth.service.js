@@ -8,6 +8,7 @@ const bcrypt_1 = require("../../../common/utils/bcrypt");
 const jwt_1 = require("../../../common/utils/jwt");
 const types_1 = require("../../../common/types");
 const auth_repository_1 = require("../repositories/auth.repository");
+const auth_mapper_1 = require("../mappers/auth.mapper");
 const DUMMY_PASSWORD_HASH = "$2b$10$7kB3K0m2v7Qx0m2Z8wR5euE0r1w6m9j6W5Qwq0Q0h3H2mD8A3VnQK";
 class AuthService {
     constructor(repository) {
@@ -43,21 +44,7 @@ class AuthService {
                 phoneNumber: payload.adminPhoneNumber,
             },
         });
-        return {
-            message: "Company registration submitted successfully",
-            company: {
-                id: company._id.toString(),
-                companyName: company.companyName,
-                companyEmail: company.companyEmail,
-                status: company.status,
-            },
-            companyAdmin: {
-                id: companyAdmin._id.toString(),
-                fullName: companyAdmin.fullName,
-                email: companyAdmin.email,
-                phoneNumber: companyAdmin.phoneNumber,
-            },
-        };
+        return (0, auth_mapper_1.mapCompanyRegistrationResponse)(company, companyAdmin);
     }
     async loginCompanyAdmin(payload) {
         const companyAdmin = await this.requireValidCredentials(() => this.repository.findCompanyAdminByEmail(payload.email), payload.password);
@@ -124,26 +111,14 @@ class AuthService {
     }
     buildAuthResponse({ message, actorType, user, company, }) {
         const tokens = this.generateTokens(user._id.toString(), actorType);
-        return {
+        return (0, auth_mapper_1.mapAuthResponse)({
             message,
-            ...tokens,
-            user: {
-                id: user._id.toString(),
-                fullName: user.fullName,
-                email: user.email,
-                phoneNumber: user.phoneNumber,
-                profilePhoto: user.profilePhoto,
-                actorType,
-            },
-            company: company
-                ? {
-                    id: company._id.toString(),
-                    companyName: company.companyName,
-                    companyEmail: company.companyEmail,
-                    status: company.status,
-                }
-                : undefined,
-        };
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            actorType,
+            user,
+            company,
+        });
     }
     generateTokens(id, actorType) {
         const payload = { id, actorType };

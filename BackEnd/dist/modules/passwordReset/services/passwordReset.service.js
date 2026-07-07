@@ -9,6 +9,7 @@ const bcrypt_1 = require("../../../common/utils/bcrypt");
 const email_1 = require("../../../common/utils/email");
 const token_1 = require("../../../common/utils/token");
 const auth_repository_1 = require("../../auth/repositories/auth.repository");
+const passwordReset_mapper_1 = require("../mappers/passwordReset.mapper");
 const passwordReset_repository_1 = require("../repositories/passwordReset.repository");
 const PASSWORD_RESET_EXPIRY_MS = 1000 * 60 * 30;
 class PasswordResetService {
@@ -35,9 +36,7 @@ class PasswordResetService {
             isUsed: false,
         });
         await this.sendResetEmail(payload.email, payload.actorType, token, expiresAt);
-        return {
-            message: "Password reset email sent successfully",
-        };
+        return (0, passwordReset_mapper_1.mapForgotPasswordResponse)();
     }
     async resetPassword(payload) {
         const passwordReset = await this.repository.findByToken(payload.token);
@@ -57,10 +56,7 @@ class PasswordResetService {
         }
         await this.repository.markAsUsed(payload.token);
         await this.repository.invalidateUserTokens(passwordReset.userId.toString(), passwordReset.userType);
-        return {
-            message: "Password reset successful",
-            actorType: passwordReset.userType,
-        };
+        return (0, passwordReset_mapper_1.mapResetPasswordResponse)(passwordReset.userType);
     }
     async sendResetEmail(email, actorType, token, expiresAt) {
         const resetLink = `${env_1.env.CLIENT_URL}/reset-password?token=${token}&actorType=${actorType}`;

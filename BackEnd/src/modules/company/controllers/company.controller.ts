@@ -49,7 +49,7 @@ class CompanyController {
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const response = await companyService.getById(req.params.companyId);
+      const response = await companyService.getById(req.params.companyId as string);
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -67,7 +67,7 @@ class CompanyController {
       }
 
       const response = await companyService.updateStatus(
-        req.params.companyId,
+        req.params.companyId as string,
         req.body.status,
         req.user.id
       );

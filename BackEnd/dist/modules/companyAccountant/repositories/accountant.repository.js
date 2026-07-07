@@ -16,6 +16,9 @@ class AccountantRepository extends base_repository_1.BaseRepository {
     async findByCompanyId(companyId) {
         return this.findMany({ companyId });
     }
+    async findAll() {
+        return this.findMany();
+    }
     async updateLastLogin(id, lastLogin) {
         return this.updateById(id, { lastLogin });
     }

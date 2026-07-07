@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.invitationService = void 0;
 const types_1 = require("../../../common/types");
+const accountant_mapper_1 = require("../../companyAccountant/mappers/accountant.mapper");
 const accountant_repository_1 = require("../../companyAccountant/repositories/accountant.repository");
 const invitation_shared_1 = require("../../companyAdminInvitation/services/invitation.shared");
 const invitation_repository_1 = require("../repositories/invitation.repository");
@@ -70,12 +71,7 @@ class InvitationService {
                     phoneNumber: request.phoneNumber,
                     department: invitation.department,
                 }, { session });
-                return {
-                    id: account._id.toString(),
-                    email: account.email,
-                    fullName: account.fullName,
-                    department: account.department,
-                };
+                return (0, accountant_mapper_1.mapAccountantAccount)(account);
             },
             findExistingUserByEmail: async (email) => accountant_repository_1.accountantRepository.findByEmail(email),
             invitationDetails: (invitation) => ({

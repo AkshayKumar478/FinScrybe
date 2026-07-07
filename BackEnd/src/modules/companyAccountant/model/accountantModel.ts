@@ -82,7 +82,7 @@ const accountantSchema = new Schema<IAccountant>(
   }
 );
 
-accountantSchema.index({ companyId: 1 });
+
 
 export const Accountant =
   models.Accountant ||

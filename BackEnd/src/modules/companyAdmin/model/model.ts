@@ -96,7 +96,7 @@ const companyAdminSchema = new Schema<ICompanyAdmin>(
   }
 );
 
-companyAdminSchema.index({ companyId: 1 });
+
 companyAdminSchema.index({ companyId: 1, email: 1 });
 
 export const CompanyAdmin =

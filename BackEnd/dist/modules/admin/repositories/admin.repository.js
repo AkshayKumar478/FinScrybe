@@ -10,6 +10,9 @@ class AdminRepository extends base_repository_1.BaseRepository {
     async findByEmail(email) {
         return this.findOne({ email });
     }
+    async findAll() {
+        return this.findMany();
+    }
     async findByEmailWithPassword(email) {
         return this.findOne({ email }, "+password");
     }

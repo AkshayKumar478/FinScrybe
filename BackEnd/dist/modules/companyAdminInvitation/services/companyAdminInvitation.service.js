@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.companyAdminInvitationService = void 0;
 const types_1 = require("../../../common/types");
+const companyAdmin_mapper_1 = require("../../companyAdmin/mappers/companyAdmin.mapper");
 const companyAdmin_repository_1 = require("../../companyAdmin/repositories/companyAdmin.repository");
 const companyAdminInvitation_repository_1 = require("../repositories/companyAdminInvitation.repository");
 const invitation_shared_1 = require("./invitation.shared");
@@ -74,12 +75,7 @@ class CompanyAdminInvitationService {
                     invitedBy: invitation.invitedBy,
                     isPrimaryAdmin: false,
                 }, { session });
-                return {
-                    id: account._id.toString(),
-                    email: account.email,
-                    fullName: account.fullName,
-                    role: account.role,
-                };
+                return (0, companyAdmin_mapper_1.mapCompanyAdminAccount)(account);
             },
             findExistingUserByEmail: async (email) => companyAdmin_repository_1.companyAdminRepository.findByEmail(email),
             invitationDetails: (invitation) => ({

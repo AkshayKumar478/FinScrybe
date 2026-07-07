@@ -61,7 +61,6 @@ const companyAdminSchema = new mongoose_1.Schema({
     timestamps: true,
     versionKey: false,
 });
-companyAdminSchema.index({ companyId: 1 });
 companyAdminSchema.index({ companyId: 1, email: 1 });
 exports.CompanyAdmin = mongoose_1.models.CompanyAdmin ||
     (0, mongoose_1.model)("CompanyAdmin", companyAdminSchema);

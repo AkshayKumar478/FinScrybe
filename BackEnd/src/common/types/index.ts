@@ -5,3 +5,4 @@ export * from "./invitationStatus.enum";
 export * from "./subscriptionStatus.enum";
 export * from "./notificationType.enum";
 export * from "./messageStatus.enum";
+export * from "./subscriptionPlan.enum";

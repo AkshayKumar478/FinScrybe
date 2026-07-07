@@ -55,7 +55,7 @@ class AccountantController {
       const response = await accountantService.listByCompanyForActor(
         req.user.actorType,
         req.user.id,
-        req.params.companyId
+        req.params.companyId as string
       );
       res.status(200).json(response);
     } catch (error) {
@@ -76,7 +76,7 @@ class AccountantController {
       const response = await accountantService.updateStatus(
         req.user.actorType,
         req.user.id,
-        req.params.accountantId,
+        req.params.accountantId as string,
         req.body.isActive
       );
 

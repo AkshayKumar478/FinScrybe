@@ -52,6 +52,5 @@ const accountantSchema = new mongoose_1.Schema({
     timestamps: true,
     versionKey: false,
 });
-accountantSchema.index({ companyId: 1 });
 exports.Accountant = mongoose_1.models.Accountant ||
     (0, mongoose_1.model)("Accountant", accountantSchema);
