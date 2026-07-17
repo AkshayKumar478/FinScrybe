@@ -1,19 +1,7 @@
 import { Types } from "mongoose";
-
-import { ActorType, CompanyStatus } from "../../common/types";
-
-export interface IActiveActor {
-  _id: Types.ObjectId;
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  profilePhoto?: string;
-  isActive: boolean;
-}
-
-export interface IPasswordActor extends IActiveActor {
-  password: string;
-}
+import { CompanyStatus } from "../../common/types";
+import { IPasswordActor } from "../../common/contracts/actorContracts";
+import { IActiveActor } from "../../common/contracts/actorContracts";
 
 export interface ICompanyScopedActor extends IPasswordActor {
   companyId: Types.ObjectId;
@@ -41,8 +29,11 @@ export interface ICompanyRegistrationPayload {
   };
 }
 
+export interface ICompanyScopedActor extends IPasswordActor {
+  companyId: Types.ObjectId;
+}
+
 export interface ICompanyRegistrationResult {
   company: ICompanySummary;
   companyAdmin: IActiveActor;
 }
-

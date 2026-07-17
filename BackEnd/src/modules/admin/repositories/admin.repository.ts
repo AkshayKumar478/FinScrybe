@@ -1,15 +1,14 @@
-import { BaseRepository } from "../../../common/base/base.repository";
-import { QueryOptions } from "mongoose";
+import {BaseRepository,IBaseRepository } from "../../../common/base/base.repository";
+import { QueryOptions,Model } from "mongoose";
 import { Admin, IAdmin } from "../model/admin.model";
 
-export interface IAdminRepository {
-  create(payload: Partial<IAdmin>): Promise<IAdmin>;
-  findById(id: string): Promise<IAdmin | null>;
+export interface IAdminRepository extends IBaseRepository<IAdmin>  {
   findAll(): Promise<IAdmin[]>;
   findByEmail(email: string): Promise<IAdmin | null>;
   findByEmailWithPassword(email: string): Promise<IAdmin | null>;
   updateLastLogin(id: string, lastLogin: Date): Promise<IAdmin | null>;
   setActiveStatus(id: string, isActive: boolean): Promise<IAdmin | null>;
+  updatePassword(id:string,password:string): Promise<IAdmin|null>
   updateById(
     id: string,
     update: Partial<IAdmin>,
@@ -21,8 +20,8 @@ export class AdminRepository
   extends BaseRepository<IAdmin>
   implements IAdminRepository
 {
-  constructor() {
-    super(Admin);
+  constructor(adminModel:Model<IAdmin>) {
+    super(adminModel);
   }
 
   async findByEmail(email: string): Promise<IAdmin | null> {
@@ -45,6 +44,12 @@ export class AdminRepository
   ): Promise<IAdmin | null> {
     return this.updateById(id, { lastLogin });
   }
+  async updatePassword(
+  id: string,
+  password: string
+): Promise<IAdmin | null> {
+  return this.updateById(id, { password });
+}
 
   async setActiveStatus(
     id: string,
@@ -54,4 +59,4 @@ export class AdminRepository
   }
 }
 
-export const adminRepository = new AdminRepository();
+export const adminRepository = new AdminRepository(Admin);

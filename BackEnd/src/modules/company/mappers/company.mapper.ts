@@ -1,4 +1,5 @@
 import { ICompany } from "../model/model";
+import { CompanyStatus } from "../../../common/types";
 
 export interface CompanyDto {
   id: string;
@@ -13,6 +14,24 @@ export interface CompanyDto {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface AuthCompanyResponse {
+  id: string;
+  companyName: string;
+  companyEmail: string;
+  status: CompanyStatus;
+}
+export interface CompanyRegistrationResponse {
+  message: string;
+  company: AuthCompanyResponse;
+  companyAdmin: {
+    id: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+  };
+}
+
+
 
 export function mapCompany(company: ICompany): CompanyDto {
   return {

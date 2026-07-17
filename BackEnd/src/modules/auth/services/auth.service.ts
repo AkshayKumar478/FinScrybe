@@ -14,7 +14,7 @@ import {
   ICompanyScopedActor,
   IPasswordActor,
   IActiveActor,
-} from "../auth.contracts";
+} 
 import {
   AuthResponse,
   CompanyRegistrationResponse,
