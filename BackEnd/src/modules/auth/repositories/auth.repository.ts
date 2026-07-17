@@ -19,7 +19,7 @@ import {
 
 export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
 
-export class AuthRepository
+ class AuthRepository
   implements
     IAuthLoginRepository,
     IPasswordResetActorRepository,

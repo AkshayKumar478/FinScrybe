@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 import { ActorType, CompanyStatus } from "../../common/types";
 
-export interface IActiveActor {
+interface IActiveActor {
   _id: Types.ObjectId;
   fullName: string;
   email: string;
@@ -11,22 +11,22 @@ export interface IActiveActor {
   isActive: boolean;
 }
 
-export interface IPasswordActor extends IActiveActor {
+ interface IPasswordActor extends IActiveActor {
   password: string;
 }
 
-export interface ICompanyScopedActor extends IPasswordActor {
+ interface ICompanyScopedActor extends IPasswordActor {
   companyId: Types.ObjectId;
 }
 
-export interface ICompanySummary {
+ interface ICompanySummary {
   _id: Types.ObjectId;
   companyName: string;
   companyEmail: string;
   status: CompanyStatus;
 }
 
-export interface ICompanyRegistrationPayload {
+ interface ICompanyRegistrationPayload {
   company: {
     companyName: string;
     industry: string;
@@ -41,7 +41,7 @@ export interface ICompanyRegistrationPayload {
   };
 }
 
-export interface ICompanyRegistrationResult {
+ interface ICompanyRegistrationResult {
   company: ICompanySummary;
   companyAdmin: IActiveActor;
 }

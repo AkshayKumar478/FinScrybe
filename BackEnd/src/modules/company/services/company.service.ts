@@ -4,14 +4,69 @@ import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { companyRepository, ICompanyRepository } from "../repositories/company.repository";
 import { authRepository } from "../../auth/repositories/auth.repository";
 import { CompanyDto, mapCompanies, mapCompany } from "../mappers/company.mapper";
+import { ICompany } from "../model/model";
+import { ICompanyAdmin } from "../../companyAdmin/model/model";
+import { ICompanyRegistrationPayload, ICompanyRegistrationResult } from "../contracts";
+import { companyAdminRepository } from "../../companyAdmin/repositories/companyAdmin.repository";
+import mongoose from "mongoose";
+import { ConflictError } from "../../../common/errors/ConflictError";
 
 class CompanyService {
-  constructor(private readonly repository: ICompanyRepository) {}
+  constructor(private readonly repository: ICompanyRepository) { }
+  
+ async createCompanyRegistration(
+    payload: ICompanyRegistrationPayload
+  ): Promise<ICompanyRegistrationResult> {
+    const session = await mongoose.startSession();
+
+    try {
+      let company: ICompany | null = null;
+      let companyAdmin: ICompanyAdmin | null = null;
+
+      await session.withTransaction(async () => {
+        company = await companyRepository.create(payload.company, { session });
+
+        companyAdmin = await companyAdminRepository.create(
+          {
+            companyId: company!._id,
+            fullName: payload.companyAdmin.fullName,
+            email: payload.companyAdmin.email,
+            password: payload.companyAdmin.password,
+            phoneNumber: payload.companyAdmin.phoneNumber,
+            isPrimaryAdmin: true,
+          },
+          { session }
+        );
+
+        await companyRepository.assignCompanyAdmin(
+          company!._id.toString(),
+          companyAdmin!._id,
+          { session, new: true }
+        );
+      });
+
+      if (!company || !companyAdmin) {
+        throw new Error("Company registration transaction did not complete");
+      }
+
+      return { company, companyAdmin };
+    } catch (error) {
+      if (isDuplicateKeyError(error)) {
+        throw new ConflictError("Company or company admin already exists");
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
 
   async listAll(): Promise<CompanyDto[]> {
-    const companies = await this.repository.findAll();
+    const companies = await this.repository.findMany();
     return mapCompanies(companies);
   }
+  
 
   async listPending(): Promise<CompanyDto[]> {
     const companies = await this.repository.findByStatus(CompanyStatus.PENDING);
@@ -98,5 +153,14 @@ class CompanyService {
     throw new ForbiddenError("This actor type has no scoped company");
   }
 }
+
+const isDuplicateKeyError = (
+  error: unknown
+): error is mongoose.mongo.MongoServerError => {
+  return (
+    error instanceof mongoose.mongo.MongoServerError &&
+    error.code === 11000
+  );
+};
 
 export const companyService = new CompanyService(companyRepository);
