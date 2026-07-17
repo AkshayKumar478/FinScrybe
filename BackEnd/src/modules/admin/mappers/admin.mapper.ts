@@ -1,5 +1,5 @@
 import { IAdmin } from "../model/admin.model";
-import { ActorType } from "../../../common/types";
+
 export interface AdminAuthResponse {
   message: string;
   accessToken: string;

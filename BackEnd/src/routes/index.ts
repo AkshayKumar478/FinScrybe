@@ -11,7 +11,7 @@ import passwordResetRoutes from "../modules/passwordReset/routes/passwordReset.r
 
 const router = Router();
 
-router.use("/auth", authRoutes);
+
 router.use("/admins", adminRoutes);
 router.use("/companies", companyRoutes);
 router.use("/company-admins", companyAdminRoutes);
