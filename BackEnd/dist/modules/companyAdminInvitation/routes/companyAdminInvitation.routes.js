@@ -1,15 +1,1 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const auth_middleware_1 = require("../../../common/middlewares/auth.middleware");
-const role_middleware_1 = require("../../../common/middlewares/role.middleware");
-const validate_middleware_1 = require("../../../common/middlewares/validate.middleware");
-const types_1 = require("../../../common/types");
-const companyAdminInvitation_controller_1 = require("../controllers/companyAdminInvitation.controller");
-const companyAdminInvitation_validation_1 = require("../validators/companyAdminInvitation.validation");
-const companyAdminInvitationRouter = (0, express_1.Router)();
-companyAdminInvitationRouter.post("/", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(types_1.ActorType.COMPANY_ADMIN), (0, validate_middleware_1.validateMiddleware)({ body: companyAdminInvitation_validation_1.createCompanyAdminInvitationSchema }), companyAdminInvitation_controller_1.companyAdminInvitationController.createInvitation.bind(companyAdminInvitation_controller_1.companyAdminInvitationController));
-companyAdminInvitationRouter.get("/validate", (0, validate_middleware_1.validateMiddleware)({ query: companyAdminInvitation_validation_1.validateCompanyAdminInvitationQuerySchema }), companyAdminInvitation_controller_1.companyAdminInvitationController.validateInvitation.bind(companyAdminInvitation_controller_1.companyAdminInvitationController));
-companyAdminInvitationRouter.post("/:invitationId/resend", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(types_1.ActorType.COMPANY_ADMIN), (0, validate_middleware_1.validateMiddleware)({ params: companyAdminInvitation_validation_1.resendCompanyAdminInvitationParamsSchema }), companyAdminInvitation_controller_1.companyAdminInvitationController.resendInvitation.bind(companyAdminInvitation_controller_1.companyAdminInvitationController));
-companyAdminInvitationRouter.post("/accept", (0, validate_middleware_1.validateMiddleware)({ body: companyAdminInvitation_validation_1.acceptCompanyAdminInvitationSchema }), companyAdminInvitation_controller_1.companyAdminInvitationController.acceptInvitation.bind(companyAdminInvitation_controller_1.companyAdminInvitationController));
-exports.default = companyAdminInvitationRouter;

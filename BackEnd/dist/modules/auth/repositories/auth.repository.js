@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authRepository = exports.AuthRepository = void 0;
 const admin_repository_1 = require("../../admin/repositories/admin.repository");
 const company_repository_1 = require("../../company/repositories/company.repository");
 const accountant_repository_1 = require("../../companyAccountant/repositories/accountant.repository");
@@ -105,8 +104,6 @@ class AuthRepository {
         }
     }
 }
-exports.AuthRepository = AuthRepository;
-exports.authRepository = new AuthRepository();
 const isDuplicateKeyError = (error) => {
     return (error instanceof mongoose_1.default.mongo.MongoServerError &&
         error.code === 11000);

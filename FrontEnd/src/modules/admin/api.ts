@@ -28,25 +28,10 @@ export type CompanyRecord = {
 
 export const adminApi = {
   loginSuperAdmin(payload: { email: string; password: string }) {
-    return request<SuperAdminAuthResponse>("/auth/super-admin/login", {
+    return request<SuperAdminAuthResponse>("/admin/login", {
       method: "POST",
       body: payload,
     });
   },
-  getPendingCompanies(token: string) {
-    return request<CompanyRecord[]>("/companies/pending", {
-      token,
-    });
-  },
-  updateCompanyStatus(
-    companyId: string,
-    status: CompanyRecord["status"],
-    token: string
-  ) {
-    return request<CompanyRecord>(`/companies/${companyId}/status`, {
-      method: "PATCH",
-      body: { status },
-      token,
-    });
-  },
+  
 };

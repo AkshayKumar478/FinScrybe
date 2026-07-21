@@ -5,7 +5,7 @@ export interface IActiveActor {
   email: string;
   phoneNumber: string;
   profilePhoto?: string;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface IPasswordActor extends IActiveActor {

@@ -6,7 +6,7 @@ import { ProtectedRoute } from "../../common/components/ProtectedRoute";
 export const adminRoutes: RouteObject[] = [
   {
     path: "/admin/login",
-    element: <SuperAdminLoginPage />
+    element: <SuperAdminLoginPage />,
   },
   {
     path: "/admin/dashboard",
@@ -14,6 +14,6 @@ export const adminRoutes: RouteObject[] = [
       <ProtectedRoute role="admin">
         <SuperAdminDashboard />
       </ProtectedRoute>
-    )
-  }
+    ),
+  },
 ];

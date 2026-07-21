@@ -7,7 +7,6 @@ export interface IAdmin extends Document {
   password: string;
   phoneNumber: string;
   profilePhoto?: string;
-  isActive: boolean;
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -46,12 +45,6 @@ const adminSchema = new Schema<IAdmin>(
       type: String,
       default: "",
     },
-
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-
     lastLogin: {
       type: Date,
     },

@@ -7,7 +7,7 @@ class CompanyRepository extends base_repository_1.BaseRepository {
     constructor() {
         super(model_1.Company);
     }
-    async findByEmail(companyEmail) {
+    async findCompanyByEmail(companyEmail) {
         return this.findOne({ companyEmail });
     }
     async findByCompanyAdminId(companyAdminId) {
@@ -15,9 +15,6 @@ class CompanyRepository extends base_repository_1.BaseRepository {
     }
     async findByStatus(status) {
         return this.findMany({ status });
-    }
-    async findAll() {
-        return this.findMany();
     }
     async assignCompanyAdmin(companyId, companyAdminId, options) {
         return this.updateById(companyId, { companyAdminId }, options);

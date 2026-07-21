@@ -22,13 +22,12 @@ const seedSuperAdmin = async () => {
       password: hashedPassword,
       phoneNumber: "+1234567890",
       profilePhoto: "",
-      isActive: true,
     });
     console.log("Super Admin seeded (admin@finscrybe.io / admin12345)");
     return;
   }
 
-  // Keep the seeded super admin credentials predictable in development.
+  // just Keeping the seeded super admin credentials predictable for development.
   await adminRepository.updateById(existingSuperAdmin._id.toString(), {
     password: hashedPassword,
     fullName: "Super Admin",

@@ -6,8 +6,7 @@ import {
   UpdateQuery,
   Model
 } from "mongoose";
-import { ActorType } from "../types";
-import { AuthActor } from "../services/authenticatedActor.service";
+
 
 type RepositoryFilter = Record<string, unknown>;
 

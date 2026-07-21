@@ -12,12 +12,6 @@ import {
 
 const accountantRouter = Router();
 
-accountantRouter.get(
-  "/me",
-  authMiddleware,
-  roleMiddleware(ActorType.ACCOUNTANT),
-  accountantController.getProfile.bind(accountantController)
-);
 
 accountantRouter.get(
   "/my-company",

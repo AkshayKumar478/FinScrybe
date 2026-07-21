@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useAuthStore } from "../../../common/stores/authStore";
 
 interface CompanyDto {
@@ -14,31 +14,11 @@ interface CompanyDto {
 
 export function PendingCompanies() {
   const [companies, setCompanies] = useState<CompanyDto[]>([]);
-  const [loading, setLoading] = useState(true);
   const token = useAuthStore((state) => state.superAdminToken);
 
-  const fetchPending = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/companies/pending", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setCompanies(data);
-      } else {
-        console.error("Failed to fetch pending companies:", data);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   useEffect(() => {
-    fetchPending();
   }, [token]);
 
   const handleApprove = async (companyId: string) => {
@@ -64,11 +44,7 @@ export function PendingCompanies() {
     }
   };
 
-  if (loading) return (
-    <div className="flex justify-center p-12">
-      <Loader2 className="animate-spin text-[#635BFF]" size={32} />
-    </div>
-  );
+ 
 
   if (companies.length === 0) return (
     <div className="flex flex-col items-center justify-center bg-white border border-slate-200 rounded-3xl p-12 shadow-sm text-center">

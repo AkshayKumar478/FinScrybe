@@ -10,7 +10,7 @@ declare global {
         actorType: ActorType;
         email: string;
         fullName: string;
-        isActive: boolean;
+        isActive?: boolean;
         companyAdminRole?: CompanyAdminRole;
       } | null;
     }

@@ -3,8 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { ICompanyAdmin } from "../../modules/companyAdmin/model/model";
 import { verifyAccessToken } from "../utils/jwt";
-import { companyAdminRepository } from "../../modules/companyAdmin/repositories/companyAdmin.repository";
-import { BaseRepository } from "../base/base.repository";
+
 import { authenticatedActorService, AuthenticatedActorService } from "../services/authenticatedActor.service";
 
 
@@ -14,13 +13,11 @@ import { authenticatedActorService, AuthenticatedActorService } from "../service
   next: NextFunction
 ) => {
   try {
-    const authorization = req.headers.authorization;
+  const token = req.cookies.accessToken;
 
-    if (!authorization?.startsWith("Bearer ")) {
-      throw new UnauthorizedError("Access token is required");
-    }
-
-    const token = authorization.split(" ")[1];
+  if (!token) {
+    throw new UnauthorizedError("Access token is required");
+  }
     const payload = verifyAccessToken(token);
     const actor = await authenticatedActorService.findActorById(
       payload.actorType,
@@ -31,16 +28,13 @@ import { authenticatedActorService, AuthenticatedActorService } from "../service
       throw new UnauthorizedError("Authenticated user no longer exists");
     }
 
-    if (!actor.isActive) {
-      throw new UnauthorizedError("Authenticated user is inactive");
-    }
 
     req.user = {
       id: actor._id.toString(),
       actorType: payload.actorType,
       email: actor.email,
       fullName: actor.fullName,
-      isActive: actor.isActive,
+  
       companyAdminRole:
         payload.actorType === "COMPANY_ADMIN"
           ? (actor as ICompanyAdmin).role

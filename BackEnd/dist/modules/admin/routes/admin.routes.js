@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_middleware_1 = require("../../../common/middlewares/auth.middleware");
-const role_middleware_1 = require("../../../common/middlewares/role.middleware");
-const types_1 = require("../../../common/types");
 const admin_controller_1 = require("../controllers/admin.controller");
+const validate_middleware_1 = require("../../../common/middlewares/validate.middleware");
+const admin_validation_1 = require("../validators/admin.validation");
 const adminRouter = (0, express_1.Router)();
-adminRouter.get("/me", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(types_1.ActorType.ADMIN), admin_controller_1.adminController.getProfile.bind(admin_controller_1.adminController));
+adminRouter.post("/login", (0, validate_middleware_1.validateMiddleware)({ body: admin_validation_1.superAdminLoginSchema }), admin_controller_1.adminController.login.bind(admin_controller_1.adminController));
+adminRouter.post("/refresh-token", admin_controller_1.adminController.refreshToken.bind(admin_controller_1.adminController));
+adminRouter.post("/logout", admin_controller_1.adminController.logout.bind(admin_controller_1.adminController));
 exports.default = adminRouter;

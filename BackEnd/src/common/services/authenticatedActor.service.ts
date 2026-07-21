@@ -4,10 +4,14 @@ import { companyAdminRepository } from "../../modules/companyAdmin/repositories/
 import { accountantRepository } from "../../modules/companyAccountant/repositories/accountant.repository";
 import { ICompanyAdmin } from "../../modules/companyAdmin/model/model";
 import { IAccountant } from "../../modules/companyAccountant/model/accountantModel";
+
 import { IAdmin } from "../../modules/admin/model/admin.model";
 
 export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
 export class AuthenticatedActorService {
+
+
+
   async findActor(actorType: ActorType, id: string) {
     switch (actorType) {
       case ActorType.ADMIN:

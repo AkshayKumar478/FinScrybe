@@ -7,15 +7,19 @@ import { validateMiddleware } from "../../../common/middlewares/validate.middlew
 import { superAdminLoginSchema } from "../validators/admin.validation";
 const adminRouter = Router();
 
-adminRouter.get(
-  "/me",
-  authMiddleware,
-  roleMiddleware(ActorType.ADMIN),
-  adminController.getProfile.bind(adminController)
-);
+
 adminRouter.post(
   "/login",
   validateMiddleware({ body: superAdminLoginSchema }),
   adminController.login.bind(adminController)
+);
+adminRouter.post(
+  "/refresh-token",
+  adminController.refreshToken.bind(adminController)
+);
+
+adminRouter.post(
+  "/logout",
+  adminController.logout.bind(adminController)
 );
 export default adminRouter;

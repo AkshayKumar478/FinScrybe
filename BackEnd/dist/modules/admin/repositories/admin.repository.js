@@ -4,8 +4,8 @@ exports.adminRepository = exports.AdminRepository = void 0;
 const base_repository_1 = require("../../../common/base/base.repository");
 const admin_model_1 = require("../model/admin.model");
 class AdminRepository extends base_repository_1.BaseRepository {
-    constructor() {
-        super(admin_model_1.Admin);
+    constructor(adminModel) {
+        super(adminModel);
     }
     async findByEmail(email) {
         return this.findOne({ email });
@@ -19,9 +19,9 @@ class AdminRepository extends base_repository_1.BaseRepository {
     async updateLastLogin(id, lastLogin) {
         return this.updateById(id, { lastLogin });
     }
-    async setActiveStatus(id, isActive) {
-        return this.updateById(id, { isActive });
+    async updatePassword(id, password) {
+        return this.updateById(id, { password });
     }
 }
 exports.AdminRepository = AdminRepository;
-exports.adminRepository = new AdminRepository();
+exports.adminRepository = new AdminRepository(admin_model_1.Admin);

@@ -1,6 +1,6 @@
 import { IAdmin } from "../model/admin.model";
 
-export interface AdminAuthResponse {
+export interface IAdminAuthResponse {
   message: string;
   accessToken: string;
   refreshToken: string;
@@ -12,18 +12,17 @@ export interface AdminAuthResponse {
     profilePhoto?: string;
   };
 }
-export interface AdminProfileDto {
+export interface IAdminProfileDto {
   id: string;
   fullName: string;
   email: string;
   phoneNumber: string;
   profilePhoto?: string;
-  isActive: boolean;
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
-export interface AdminAuthUser {
+export interface IAdminAuthUser {
   id: string;
   fullName: string;
   email: string;
@@ -33,7 +32,7 @@ export interface AdminAuthUser {
 
 export function mapAdminAuthUser(
   admin: IAdmin
-): AdminAuthUser {
+): IAdminAuthUser {
   return {
     id: admin._id.toString(),
     fullName: admin.fullName,
@@ -50,7 +49,7 @@ export function mapAdminLoginResponse(params: {
   accessToken: string;
   refreshToken: string;
   user: IAdmin;
-}): AdminAuthResponse {
+}): IAdminAuthResponse {
   return {
     message: params.message,
     accessToken: params.accessToken,

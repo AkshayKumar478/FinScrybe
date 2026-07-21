@@ -4,6 +4,15 @@ exports.companyController = void 0;
 const UnauthorizedError_1 = require("../../../common/errors/UnauthorizedError");
 const company_service_1 = require("../services/company.service");
 class CompanyController {
+    async registerCompany(req, res, next) {
+        try {
+            const response = await company_service_1.companyService.registerCompany(req.body);
+            res.status(201).json(response);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
     async listAll(req, res, next) {
         try {
             const response = await company_service_1.companyService.listAll();

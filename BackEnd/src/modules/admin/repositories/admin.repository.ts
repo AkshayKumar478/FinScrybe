@@ -7,7 +7,6 @@ export interface IAdminRepository extends IBaseRepository<IAdmin>  {
   findByEmail(email: string): Promise<IAdmin | null>;
   findByEmailWithPassword(email: string): Promise<IAdmin | null>;
   updateLastLogin(id: string, lastLogin: Date): Promise<IAdmin | null>;
-  setActiveStatus(id: string, isActive: boolean): Promise<IAdmin | null>;
   updatePassword(id:string,password:string): Promise<IAdmin|null>
   updateById(
     id: string,
@@ -51,12 +50,7 @@ export class AdminRepository
   return this.updateById(id, { password });
 }
 
-  async setActiveStatus(
-    id: string,
-    isActive: boolean
-  ): Promise<IAdmin | null> {
-    return this.updateById(id, { isActive });
-  }
+ 
 }
 
 export const adminRepository = new AdminRepository(Admin);
