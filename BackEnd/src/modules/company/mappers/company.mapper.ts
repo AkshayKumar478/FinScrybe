@@ -1,6 +1,7 @@
 import { ICompany } from "../model/model";
 import { CompanyStatus } from "../../../common/types";
-
+import { ICompanySummary } from "../contracts";
+import { IActiveActor } from "../../../common/contracts/actorContracts";
 export interface CompanyDto {
   id: string;
   companyName: string;
@@ -14,12 +15,14 @@ export interface CompanyDto {
   createdAt: Date;
   updatedAt: Date;
 }
+
 export interface AuthCompanyResponse {
   id: string;
   companyName: string;
   companyEmail: string;
   status: CompanyStatus;
 }
+
 export interface CompanyRegistrationResponse {
   message: string;
   company: AuthCompanyResponse;
@@ -46,6 +49,31 @@ export function mapCompany(company: ICompany): CompanyDto {
     approvedAt: company.approvedAt,
     createdAt: company.createdAt,
     updatedAt: company.updatedAt,
+  };
+}
+export function mapCompanySummary(
+  company: ICompanySummary
+): AuthCompanyResponse {
+  return {
+    id: company._id.toString(),
+    companyName: company.companyName,
+    companyEmail: company.companyEmail,
+    status: company.status,
+  };
+}
+export function mapCompanyRegistrationResponse(
+  company: ICompanySummary,
+  companyAdmin: IActiveActor
+): CompanyRegistrationResponse {
+  return {
+    message: "Company registration submitted successfully",
+    company: mapCompanySummary(company),
+    companyAdmin: {
+      id: companyAdmin._id.toString(),
+      fullName: companyAdmin.fullName,
+      email: companyAdmin.email,
+      phoneNumber: companyAdmin.phoneNumber,
+    },
   };
 }
 

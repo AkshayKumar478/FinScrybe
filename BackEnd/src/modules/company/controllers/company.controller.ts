@@ -3,7 +3,22 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { companyService } from "../services/company.service";
 
+
 class CompanyController {
+   async registerCompany(
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> {
+      try {
+        const response = await companyService.registerCompany(req.body);
+        res.status(201).json(response);
+      } catch (error) {
+        next(error);
+      }
+    }
+  
+
   async listAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const response = await companyService.listAll();

@@ -42,5 +42,5 @@ export const accountantLoginSchema = z.object({
 
 export type SuperAdminLoginInput = z.infer<typeof superAdminLoginSchema>;
 export type CompanyRegistrationInput = z.infer<typeof companyRegistrationSchema>;
-export type CompanyAdminLoginInput = z.infer<typeof companyAdminLoginSchema>;
+
 export type AccountantLoginInput = z.infer<typeof accountantLoginSchema>;

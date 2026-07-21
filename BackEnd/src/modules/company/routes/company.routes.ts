@@ -3,6 +3,7 @@ import { authMiddleware } from "../../../common/middlewares/auth.middleware";
 import { roleMiddleware } from "../../../common/middlewares/role.middleware";
 import { validateMiddleware } from "../../../common/middlewares/validate.middleware";
 import { ActorType } from "../../../common/types";
+import { companyRegistrationSchema } from "../validators/company.validation";
 import { companyController } from "../controllers/company.controller";
 import {
   companyIdParamsSchema,
@@ -10,6 +11,12 @@ import {
 } from "../validators/company.validation";
 
 const companyRouter = Router();
+companyRouter.post(
+  "/register",
+  validateMiddleware({ body: companyRegistrationSchema }),
+  companyController.registerCompany.bind(companyController)
+);
+
 
 companyRouter.get(
   "/",
@@ -25,12 +32,7 @@ companyRouter.get(
   companyController.listPending.bind(companyController)
 );
 
-companyRouter.get(
-  "/me",
-  authMiddleware,
-  roleMiddleware(ActorType.COMPANY_ADMIN, ActorType.ACCOUNTANT),
-  companyController.getCurrentCompany.bind(companyController)
-);
+
 
 companyRouter.get(
   "/:companyId",

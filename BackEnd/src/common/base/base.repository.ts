@@ -6,10 +6,14 @@ import {
   UpdateQuery,
   Model
 } from "mongoose";
+import { ActorType } from "../types";
+import { AuthActor } from "../services/authenticatedActor.service";
 
 type RepositoryFilter = Record<string, unknown>;
 
 export interface IBaseRepository<TDocument extends Document> {
+
+
   create(
     payload: Partial<TDocument>,
     options?: SaveOptions
@@ -26,6 +30,7 @@ export interface IBaseRepository<TDocument extends Document> {
     projection?: ProjectionType<TDocument>,
     options?: QueryOptions<TDocument>
   ): Promise<TDocument | null>;
+
 
   findMany(
     filter?: RepositoryFilter,

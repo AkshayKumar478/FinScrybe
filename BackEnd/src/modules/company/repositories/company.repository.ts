@@ -8,14 +8,15 @@ import { companyAdminRepository } from "../../companyAdmin/repositories/companyA
 import { ICompanyAdmin } from "../../companyAdmin/model/model";
 export interface ICompanyRepository extends IBaseRepository<ICompany> {
  
-  findByEmail(
+  findCompanyByEmail(
     companyEmail: string
   ): Promise<ICompany | null>;
+
 
   findByCompanyAdminId(
     companyAdminId: string | Types.ObjectId
   ): Promise<ICompany | null>;
-
+  
   findByStatus(
     status: CompanyStatus
   ): Promise<ICompany[]>;
@@ -42,9 +43,7 @@ export class CompanyRepository
     super(Company);
   }
 
- 
-
-  async findByEmail(
+  async findCompanyByEmail(
     companyEmail: string
   ): Promise<ICompany | null> {
     return this.findOne({ companyEmail });
@@ -59,7 +58,6 @@ export class CompanyRepository
   async findByStatus(status: CompanyStatus): Promise<ICompany[]> {
     return this.findMany({ status });
   }
-
 
   async assignCompanyAdmin(
     companyId: string,

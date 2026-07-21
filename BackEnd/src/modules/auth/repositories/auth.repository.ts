@@ -167,7 +167,7 @@ export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
   }
 }
 
-export const authRepository = new AuthRepository();
+
 
 const isDuplicateKeyError = (
   error: unknown

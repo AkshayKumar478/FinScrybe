@@ -2,17 +2,41 @@ import { ActorType, CompanyStatus } from "../../../common/types";
 import { ForbiddenError } from "../../../common/errors/ForbiddenError";
 import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { companyRepository, ICompanyRepository } from "../repositories/company.repository";
-import { authRepository } from "../../auth/repositories/auth.repository";
-import { CompanyDto, mapCompanies, mapCompany } from "../mappers/company.mapper";
+import { CompanyDto, mapCompanies, mapCompany, CompanyRegistrationResponse,mapCompanyRegistrationResponse } from "../mappers/company.mapper";
 import { ICompany } from "../model/model";
 import { ICompanyAdmin } from "../../companyAdmin/model/model";
 import { ICompanyRegistrationPayload, ICompanyRegistrationResult } from "../contracts";
-import { companyAdminRepository } from "../../companyAdmin/repositories/companyAdmin.repository";
+import { companyAdminRepository, ICompanyAdminRepository } from "../../companyAdmin/repositories/companyAdmin.repository";
 import mongoose from "mongoose";
+import { authenticatedActorService } from "../../../common/services/authenticatedActor.service";
+import { CompanyRegistrationInput } from  "../validators/company.validation";
 import { ConflictError } from "../../../common/errors/ConflictError";
 
+import { hashValue } from "../../../common/utils/bcrypt";
+
+
+
 class CompanyService {
-  constructor(private readonly repository: ICompanyRepository) { }
+  constructor(private readonly repository: ICompanyRepository,private readonly companyAdminRepo: ICompanyAdminRepository) { }
+  
+   private async assertCompanyRegistrationAvailability(
+      payload: CompanyRegistrationInput
+    ): Promise<void> {
+      const [existingCompany, existingCompanyAdmin] = await Promise.all([
+        this.repository.findCompanyByEmail(payload.companyEmail),
+        this.companyAdminRepo.findByEmail(payload.adminEmail),
+      ]);
+  
+      if (existingCompany) {
+        throw new ConflictError("Company email is already registered");
+      }
+  
+      if (existingCompanyAdmin) {
+        throw new ConflictError("Company admin email is already registered");
+      }
+    }
+  
+
   
  async createCompanyRegistration(
     payload: ICompanyRegistrationPayload
@@ -24,9 +48,9 @@ class CompanyService {
       let companyAdmin: ICompanyAdmin | null = null;
 
       await session.withTransaction(async () => {
-        company = await companyRepository.create(payload.company, { session });
+        company = await this.repository.create(payload.company, { session });
 
-        companyAdmin = await companyAdminRepository.create(
+        companyAdmin = await this.companyAdminRepo.create(
           {
             companyId: company!._id,
             fullName: payload.companyAdmin.fullName,
@@ -38,7 +62,7 @@ class CompanyService {
           { session }
         );
 
-        await companyRepository.assignCompanyAdmin(
+        await this.repository.assignCompanyAdmin(
           company!._id.toString(),
           companyAdmin!._id,
           { session, new: true }
@@ -59,7 +83,33 @@ class CompanyService {
     } finally {
       await session.endSession();
     }
-  }
+ }
+  
+  async registerCompany(
+      payload: CompanyRegistrationInput
+    ): Promise<CompanyRegistrationResponse> {
+      await this.assertCompanyRegistrationAvailability(payload);
+  
+      const hashedPassword = await hashValue(payload.adminPassword);
+  
+      const { company, companyAdmin } =
+        await this.createCompanyRegistration({
+          company: {
+            companyName: payload.companyName,
+            industry: payload.industry,
+            companyEmail: payload.companyEmail,
+            companyPhone: payload.companyPhone,
+          },
+          companyAdmin: {
+            fullName: payload.adminFullName,
+            email: payload.adminEmail,
+            password: hashedPassword,
+            phoneNumber: payload.adminPhoneNumber,
+          },
+        });
+  
+      return mapCompanyRegistrationResponse(company, companyAdmin);
+    }
 
 
   async listAll(): Promise<CompanyDto[]> {
@@ -131,7 +181,7 @@ class CompanyService {
     actorId: string
   ) {
     if (actorType === ActorType.COMPANY_ADMIN) {
-      const actor = await authRepository.findActorById(actorType, actorId);
+      const actor = await authenticatedActorService.findActorById(actorType, actorId);
 
       if (!actor || !("companyId" in actor)) {
         throw new ForbiddenError("Company admin is not linked to a company");
@@ -141,7 +191,7 @@ class CompanyService {
     }
 
     if (actorType === ActorType.ACCOUNTANT) {
-      const actor = await authRepository.findActorById(actorType, actorId);
+      const actor = await authenticatedActorService.findActorById(actorType, actorId);
 
       if (!actor || !("companyId" in actor)) {
         throw new ForbiddenError("Accountant is not linked to a company");
@@ -163,4 +213,4 @@ const isDuplicateKeyError = (
   );
 };
 
-export const companyService = new CompanyService(companyRepository);
+export const companyService = new CompanyService(companyRepository,companyAdminRepository);
