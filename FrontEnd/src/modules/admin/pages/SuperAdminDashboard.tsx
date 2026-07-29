@@ -15,6 +15,7 @@ import adminAvatar from "../../../assets/admin_avatar.png";
 import { useAuthStore } from "../../../common/stores/authStore";
 import { useAdminDashboardStore } from "../../../common/stores/adminDashboardStore";
 import { PendingCompanies } from "../components/PendingCompanies";
+import { adminApi } from "../api";
 
 const tabLabels: Record<string, string> = {
   dashboard: "Dashboard",
@@ -37,8 +38,15 @@ export function SuperAdminDashboard() {
 
   const handleSelectTab = (tabId: string) => {
     if (tabId === "logout") {
-      logoutSuperAdmin();
-      navigate("/admins/login");
+      void adminApi
+        .logoutSuperAdmin()
+        .catch((error) => {
+          console.error("Failed to clear admin session cookies:", error);
+        })
+        .finally(() => {
+          logoutSuperAdmin();
+          navigate("/admin/login");
+        });
     } else {
       setActiveTab(tabId);
     }

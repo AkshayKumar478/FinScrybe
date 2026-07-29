@@ -47,7 +47,6 @@ class AdminController implements IAdminController {
       .json({
         message: response.message,
         user: response.user,
-        accessToken: response.accessToken,
       });
 
     } catch (error) {

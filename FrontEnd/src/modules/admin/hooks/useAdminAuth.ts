@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { loginSchema, type LoginFormValues } from "../schemas/auth";
 import { useAuthStore } from "../../../common/stores/authStore";
-
+import { adminApi } from "../api";
 export function useSuperAdminLogin() {
   const navigate = useNavigate();
 
@@ -17,33 +17,11 @@ export function useSuperAdminLogin() {
   });
 
 const mutation = useMutation({
-  mutationFn: async (data: LoginFormValues) => {
-    const res = await fetch(
-      "http://localhost:5000/api/admin/login",
-      {
-        method: "POST",
-        credentials: "include", // IMPORTANT
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-
-    const responseData = await res.json();
-
-    if (!res.ok) {
-      throw new Error(
-        responseData.message ||
-          "Invalid email or password"
-      );
-    }
-
-    return responseData;
-  },
+  mutationFn: adminApi.loginSuperAdmin,
 
   onSuccess: (data) => {
-    useAuthStore.getState().setSuperAdminToken(data.accessToken);
+    
+    useAuthStore.getState().setSuperAdmin(data.user);
     navigate("/admin/dashboard");
   },
 });

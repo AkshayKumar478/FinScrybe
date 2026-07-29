@@ -3,8 +3,6 @@ import { CompanyStatus } from "../../common/constants/enums";
 
 export type SuperAdminAuthResponse = {
   message: string;
-  accessToken: string;
-  refreshToken: string;
   user: {
     id: string;
     fullName: string;
@@ -33,5 +31,21 @@ export const adminApi = {
       body: payload,
     });
   },
-  
+
+  logoutSuperAdmin() {
+    return request<{ message: string }>("/admin/logout", {
+      method: "POST",
+    });
+  },
+
+  listPendingCompanies() {
+    return request<CompanyRecord[]>("/companies/pending");
+  },
+
+  updateCompanyStatus(companyId: string, status: CompanyStatus) {
+    return request<{ message: string }>(`/companies/${companyId}/status`, {
+      method: "PATCH",
+      body: { status },
+    });
+  },
 };

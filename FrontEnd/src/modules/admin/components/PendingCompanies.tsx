@@ -1,50 +1,35 @@
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
-import { useAuthStore } from "../../../common/stores/authStore";
-
-interface CompanyDto {
-  id: string;
-  companyName: string;
-  industry: string;
-  companyEmail: string;
-  companyPhone: string;
-  status: string;
-  createdAt: string;
-}
+import { CompanyStatus } from "../../../common/constants/enums";
+import { adminApi, type CompanyRecord } from "../api";
 
 export function PendingCompanies() {
-  const [companies, setCompanies] = useState<CompanyDto[]>([]);
-  const token = useAuthStore((state) => state.superAdminToken);
-
-  
+  const [companies, setCompanies] = useState<CompanyRecord[]>([]);
 
   useEffect(() => {
-  }, [token]);
+    const loadPendingCompanies = async () => {
+      try {
+        const data = await adminApi.listPendingCompanies();
+        setCompanies(data);
+      } catch (error) {
+        console.error("Failed to load pending companies:", error);
+      }
+    };
+
+    void loadPendingCompanies();
+  }, []);
 
   const handleApprove = async (companyId: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/companies/${companyId}/status`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: "APPROVED" }),
-      });
-      if (res.ok) {
-        setCompanies(companies.filter(c => c.id !== companyId));
-      } else {
-        const error = await res.json();
-        console.error("Failed to approve company:", error);
-        alert("Failed to approve company: " + (error.message || "Unknown error"));
-      }
+      await adminApi.updateCompanyStatus(companyId, CompanyStatus.APPROVED);
+      setCompanies((currentCompanies) =>
+        currentCompanies.filter((company) => company.id !== companyId)
+      );
     } catch (e) {
       console.error(e);
       alert("An error occurred while approving the company.");
     }
   };
-
- 
 
   if (companies.length === 0) return (
     <div className="flex flex-col items-center justify-center bg-white border border-slate-200 rounded-3xl p-12 shadow-sm text-center">

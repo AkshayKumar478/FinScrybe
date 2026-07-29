@@ -1,3 +1,4 @@
+
 export class ApiError extends Error {
   public readonly status: number;
   public readonly details?: unknown;
@@ -23,6 +24,7 @@ export type RequestOptions = {
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: options.method ?? "GET",
+    credentials:"include",
     headers: {
       "Content-Type": "application/json",
       ...(options.token

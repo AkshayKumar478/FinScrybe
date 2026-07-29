@@ -1,19 +1,26 @@
 import { create } from "zustand";
 import { storage } from "../utils/storage";
 
-interface ClientUser {
+interface IClientUser {
   email: string;
   fullName: string;
-  token?: string;
   role?: string;
   actorType?: string;
 }
+interface ISuperAdmin {
+  id: string;
+  email: string;
+  fullName: string;
+  actorType?: string;
+  phoneNumber?: string;
+  profilePhoto?: string;
+}
 
 interface AuthState {
-  clientUser: ClientUser | null;
-  superAdminToken: string | null;
-  setClientUser: (user: ClientUser | null) => void;
-  setSuperAdminToken: (token: string | null) => void;
+  clientUser: IClientUser | null;
+  superAdmin: ISuperAdmin | null;
+  setClientUser: (user: IClientUser | null) => void;
+  setSuperAdmin: (user: ISuperAdmin | null) => void;
   logoutClient: () => void;
   logoutSuperAdmin: () => void;
 }
@@ -23,8 +30,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     const saved = storage.getItem("clientUser");
     return saved ? JSON.parse(saved) : null;
   })(),
-  superAdminToken: storage.getItem("superAdminToken"),
-  
+  superAdmin: (() => {
+    const saved = storage.getItem("superAdmin");
+    return saved ? JSON.parse(saved) : null;
+  })(),
+
   setClientUser: (user) => {
     if (user) {
       storage.setItem("clientUser", JSON.stringify(user));
@@ -33,23 +43,23 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     set({ clientUser: user });
   },
-  
-  setSuperAdminToken: (token) => {
-    if (token) {
-      storage.setItem("superAdminToken", token);
+
+  setSuperAdmin: (user) => {
+    if (user) {
+      storage.setItem("superAdmin", JSON.stringify(user));
     } else {
-      storage.removeItem("superAdminToken");
+      storage.removeItem("superAdmin");
     }
-    set({ superAdminToken: token });
+    set({ superAdmin: user });
   },
-  
+
   logoutClient: () => {
     storage.removeItem("clientUser");
     set({ clientUser: null });
   },
-  
+
   logoutSuperAdmin: () => {
-    storage.removeItem("superAdminToken");
-    set({ superAdminToken: null });
-  }
+    storage.removeItem("superAdmin");
+    set({ superAdmin: null });
+  },
 }));

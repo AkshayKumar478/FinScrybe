@@ -8,10 +8,10 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children, role }: ProtectedRouteProps) {
   const clientUser = useAuthStore((state) => state.clientUser);
-  const superAdminToken = useAuthStore((state) => state.superAdminToken);
+  const superAdmin = useAuthStore((state) => state.superAdmin);
 
   if (role === "admin") {
-    if (!superAdminToken) {
+    if (!superAdmin) {
       return <Navigate to="/admin/login" replace />;
     }
   } else if (role === "client") {
