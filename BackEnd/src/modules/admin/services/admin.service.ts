@@ -2,7 +2,7 @@ import { adminRepository, IAdminRepository } from "../repositories/admin.reposit
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { compareValue, hashValue } from "../../../common/utils/bcrypt";
 import { SuperAdminLoginInput } from "../validators/admin.validation";
-import { IAdminAuthResponse } from "../mappers/admin.mapper";
+import { IAdminAuthResponse, IAdminAuthUser, mapAdminAuthUser } from "../mappers/admin.mapper";
 import { IPasswordActor } from "../../../common/contracts/actorContracts";
 import { generateAccessToken,generateRefreshToken } from "../../../common/utils/jwt";
 import { ActorType } from "../../../common/types";
@@ -17,6 +17,7 @@ interface AuthTokens {
 export interface IAdminService { 
   login(payload: SuperAdminLoginInput): Promise<IAdminAuthResponse>
    refreshToken(refreshToken: string): Promise<AuthTokens>;
+  getCurrentAdmin(adminId: string): Promise<IAdminAuthUser>;
 }
 
 class AdminService implements IAdminService{
@@ -101,6 +102,16 @@ private buildAuthResponse({
 
   return this.generateTokens(admin._id.toString());
 }
+
+  async getCurrentAdmin(adminId: string): Promise<IAdminAuthUser> {
+    const admin = await this.repository.findById(adminId);
+
+    if (!admin) {
+      throw new UnauthorizedError("Authenticated admin no longer exists");
+    }
+
+    return mapAdminAuthUser(admin);
+  }
   
 
 

@@ -13,6 +13,10 @@ export type SuperAdminAuthResponse = {
   };
 };
 
+export type CurrentSuperAdminResponse = {
+  user: SuperAdminAuthResponse["user"];
+};
+
 export type CompanyRecord = {
   id: string;
   companyName: string;
@@ -36,6 +40,10 @@ export const adminApi = {
     return request<{ message: string }>("/admin/logout", {
       method: "POST",
     });
+  },
+
+  getCurrentSuperAdmin() {
+    return request<CurrentSuperAdminResponse>("/admin/me");
   },
 
   listPendingCompanies() {

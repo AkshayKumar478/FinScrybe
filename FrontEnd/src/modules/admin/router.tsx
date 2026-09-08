@@ -1,19 +1,23 @@
 import type { RouteObject } from "react-router-dom";
 import { SuperAdminLoginPage } from "./pages/SuperAdminLoginPage";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
-import { ProtectedRoute } from "../../common/components/ProtectedRoute";
+import AuthGuard from "../../common/components/AuthGaurd";
 
 export const adminRoutes: RouteObject[] = [
   {
     path: "/admin/login",
-    element: <SuperAdminLoginPage />,
+    element: (
+      <AuthGuard type="superAdmin" mode="guest" redirectTo="/admin/dashboard">
+        <SuperAdminLoginPage />
+      </AuthGuard>
+    ),
   },
   {
     path: "/admin/dashboard",
     element: (
-      <ProtectedRoute role="admin">
+      <AuthGuard type="superAdmin" mode="protected" redirectTo="/admin/login">
         <SuperAdminDashboard />
-      </ProtectedRoute>
+      </AuthGuard>
     ),
   },
 ];

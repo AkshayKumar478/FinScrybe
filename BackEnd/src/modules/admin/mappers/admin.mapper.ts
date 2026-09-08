@@ -1,4 +1,5 @@
 import { IAdmin } from "../model/admin.model";
+import { ActorType } from "../../../common/types";
 
 export interface IAdminAuthResponse {
   message: string;
@@ -28,6 +29,7 @@ export interface IAdminAuthUser {
   email: string;
   phoneNumber: string;
   profilePhoto?: string;
+  actorType: ActorType.ADMIN;
 }
 
 export function mapAdminAuthUser(
@@ -39,6 +41,7 @@ export function mapAdminAuthUser(
     email: admin.email,
     phoneNumber: admin.phoneNumber,
     profilePhoto: admin.profilePhoto,
+    actorType: ActorType.ADMIN,
   };
 }
 

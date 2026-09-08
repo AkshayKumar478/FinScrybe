@@ -1,17 +1,43 @@
 import { NextFunction, Request, Response } from "express";
 
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
-import { companyService } from "../services/company.service";
+import { companyService, ICompanyService } from "../services/company.service";
 
+export interface ICompanyController {
+  registerCompany(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  listAll(req: Request, res: Response, next: NextFunction): Promise<void>;
+  listPending(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getCurrentCompany(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getById(req: Request, res: Response, next: NextFunction): Promise<void>;
+  updateStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+}
 
-class CompanyController {
+class CompanyController implements ICompanyController {
+  constructor(private readonly service: ICompanyService) {}
+
    async registerCompany(
       req: Request,
       res: Response,
       next: NextFunction
     ): Promise<void> {
       try {
-        const response = await companyService.registerCompany(req.body);
+        const response = await this.service.registerCompany(req.body);
         res.status(201).json(response);
       } catch (error) {
         next(error);
@@ -21,7 +47,7 @@ class CompanyController {
 
   async listAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const response = await companyService.listAll();
+      const response = await this.service.listAll();
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -34,7 +60,7 @@ class CompanyController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const response = await companyService.listPending();
+      const response = await this.service.listPending();
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -51,7 +77,7 @@ class CompanyController {
         throw new UnauthorizedError("Authentication is required");
       }
 
-      const response = await companyService.getCurrentUsersCompany(
+      const response = await this.service.getCurrentUsersCompany(
         req.user.actorType,
         req.user.id
       );
@@ -64,7 +90,7 @@ class CompanyController {
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const response = await companyService.getById(req.params.companyId as string);
+      const response = await this.service.getById(req.params.companyId as string);
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -81,7 +107,7 @@ class CompanyController {
         throw new UnauthorizedError("Authentication is required");
       }
 
-      const response = await companyService.updateStatus(
+      const response = await this.service.updateStatus(
         req.params.companyId as string,
         req.body.status,
         req.user.id
@@ -94,4 +120,4 @@ class CompanyController {
   }
 }
 
-export const companyController = new CompanyController();
+export const companyController = new CompanyController(companyService);

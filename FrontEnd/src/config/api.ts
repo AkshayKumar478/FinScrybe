@@ -21,6 +21,15 @@ export type RequestOptions = {
   token?: string | null;
 };
 
+const clearAuthenticationOnUnauthorized = async (): Promise<void> => {
+  const { useAuthStore } = await import("../common/stores/authStore");
+  const auth = useAuthStore.getState();
+
+  auth.logoutClient();
+  auth.logoutSuperAdmin();
+  auth.logoutCompanyAdmin();
+};
+
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: options.method ?? "GET",
@@ -39,6 +48,10 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      await clearAuthenticationOnUnauthorized();
+    }
+
     throw new ApiError(
       data?.message ?? "Request failed",
       response.status,

@@ -14,9 +14,25 @@ import { ConflictError } from "../../../common/errors/ConflictError";
 
 import { hashValue } from "../../../common/utils/bcrypt";
 
+export interface ICompanyService {
+  registerCompany(
+    payload: CompanyRegistrationInput
+  ): Promise<CompanyRegistrationResponse>;
+  listAll(): Promise<CompanyDto[]>;
+  listPending(): Promise<CompanyDto[]>;
+  getById(companyId: string): Promise<CompanyDto>;
+  getCurrentUsersCompany(
+    actorType: ActorType,
+    actorId: string
+  ): Promise<CompanyDto>;
+  updateStatus(
+    companyId: string,
+    status: CompanyStatus,
+    approvedBy: string
+  ): Promise<CompanyDto>;
+}
 
-
-class CompanyService {
+class CompanyService implements ICompanyService {
   constructor(private readonly repository: ICompanyRepository,private readonly companyAdminRepo: ICompanyAdminRepository) { }
   
    private async assertCompanyRegistrationAvailability(
@@ -38,7 +54,7 @@ class CompanyService {
   
 
   
- async createCompanyRegistration(
+ private async createCompanyRegistration(
     payload: ICompanyRegistrationPayload
   ): Promise<ICompanyRegistrationResult> {
     const session = await mongoose.startSession();

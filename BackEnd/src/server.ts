@@ -33,7 +33,6 @@ const seedSuperAdmin = async () => {
     fullName: "Super Admin",
     phoneNumber: "+1234567890",
     profilePhoto: "",
-    isActive: true,
   });
 };
 

@@ -8,6 +8,7 @@ import {
 } from "mongoose";
 
 
+
 type RepositoryFilter = Record<string, unknown>;
 
 export interface IBaseRepository<TDocument extends Document> {
@@ -167,3 +168,5 @@ export class BaseRepository<TDocument extends Document> implements IBaseReposito
     return this.model.countDocuments(filter);
   }
 }
+
+export const baseRepository=new BaseRepository(Model)

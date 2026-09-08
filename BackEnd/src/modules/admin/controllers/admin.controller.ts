@@ -21,6 +21,11 @@ interface IAdminController{
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getCurrentAdmin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }
 class AdminController implements IAdminController {
   constructor(private readonly adminService: IAdminService) { 
@@ -104,6 +109,23 @@ class AdminController implements IAdminController {
     next(error);
   }
 }
+
+  async getCurrentAdmin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user?.id) {
+        throw new UnauthorizedError("Authentication is required");
+      }
+
+      const user = await this.adminService.getCurrentAdmin(req.user.id);
+      res.status(200).json({ user });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const adminController = new AdminController(adminService);

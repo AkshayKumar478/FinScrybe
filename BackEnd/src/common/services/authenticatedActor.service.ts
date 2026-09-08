@@ -8,7 +8,12 @@ import { IAccountant } from "../../modules/companyAccountant/model/accountantMod
 import { IAdmin } from "../../modules/admin/model/admin.model";
 
 export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
-export class AuthenticatedActorService {
+export interface IAuthenticatedActorService{
+  findActor(actorType:ActorType,id:string):Promise<AuthActor|null>
+  findActorByEmail(actorType: ActorType, email: string):Promise<AuthActor|null>
+  findActorById(actorType: ActorType, actorId: string):Promise<AuthActor|null>
+}
+export class AuthenticatedActorService implements IAuthenticatedActorService{
 
 
 

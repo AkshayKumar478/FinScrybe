@@ -12,7 +12,7 @@ export function useSuperAdminLogin() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "admin@finscrybe.io",
-      password: ""
+      password: "admin12345"
     }
   });
 
@@ -22,9 +22,12 @@ const mutation = useMutation({
   onSuccess: (data) => {
     
     useAuthStore.getState().setSuperAdmin(data.user);
-    navigate("/admin/dashboard");
+    useAuthStore.getState().setSuperAdminSessionChecked(true);
+    navigate("/admin/dashboard", { replace: true });
   },
 });
+
+
 
   const onSubmit = (data: LoginFormValues) => {
     mutation.mutate(data);

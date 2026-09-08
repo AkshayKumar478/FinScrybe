@@ -1,3 +1,4 @@
+import { ICompanyAdmin } from "../model/model";
 import { CompanyAdminRole } from "../../../common/types";
 
 export interface CompanyAdminAccountResponse {
@@ -20,3 +21,21 @@ export function mapCompanyAdminAccount(account: {
     role: account.role,
   };
 }
+
+export interface CompanyAdminAuthResponse {
+  message: string;
+  accessToken: string;
+  refreshToken: string;
+  user: CompanyAdminAccountResponse;
+}
+
+export const mapCompanyAdminLoginResponse = (params: {
+  accessToken: string;
+  refreshToken: string;
+  user: ICompanyAdmin;
+}): CompanyAdminAuthResponse => ({
+  message: "Company admin login successful",
+  accessToken: params.accessToken,
+  refreshToken: params.refreshToken,
+  user: mapCompanyAdminAccount(params.user),
+});

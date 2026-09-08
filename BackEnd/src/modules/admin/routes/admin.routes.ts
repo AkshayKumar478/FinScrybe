@@ -22,4 +22,11 @@ adminRouter.post(
   "/logout",
   adminController.logout.bind(adminController)
 );
+
+adminRouter.get(
+  "/me",
+  authMiddleware,
+  roleMiddleware(ActorType.ADMIN),
+  adminController.getCurrentAdmin.bind(adminController)
+);
 export default adminRouter;
