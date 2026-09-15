@@ -12,15 +12,8 @@ import { mapAdminLoginResponse } from "../mappers/admin.mapper";
 import { IAdmin } from "../model/admin.model.interface";
 import { DUMMY_PASSWORD_HASH } from "../../../common/constants/constants";
 import { verifyRefreshToken } from "../../../common/utils/jwt";
-interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-export interface IAdminService { 
-  login(payload: SuperAdminLoginInput): Promise<IAdminAuthResponse>
-   refreshToken(refreshToken: string): Promise<AuthTokens>;
-  getCurrentAdmin(adminId: string): Promise<IAdminAuthUser>;
-}
+import {IAdminService} from './admin.service.interface'
+import {AuthTokens} from './admin.service.interface'
 
 class AdminService implements IAdminService{
   constructor(private readonly repository: IAdminRepository) {}

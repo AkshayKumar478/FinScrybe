@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-
-
+import { HttpStatus }from '../../../common/constants/httpstatus'
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
-import { adminService, IAdminService } from "../services/admin.service";
+import { adminService } from "../services/admin.service";
+import {IAdminService} from '../services/admin.service.interface'
 import {
   accessTokenCookieOptions,
   refreshTokenCookieOptions,
@@ -29,7 +29,7 @@ class AdminController implements IAdminController {
         response.refreshToken,
         refreshTokenCookieOptions
       )
-      .status(200)
+      .status(HttpStatus.OK)
       .json({
         message: response.message,
         user: response.user,
@@ -65,7 +65,7 @@ class AdminController implements IAdminController {
         tokens.refreshToken,
         refreshTokenCookieOptions
       )
-      .status(200)
+      .status(HttpStatus.OK)
       .json({
         message: "Token refreshed",
       });
@@ -102,7 +102,7 @@ class AdminController implements IAdminController {
       }
 
       const user = await this.adminService.getCurrentAdmin(req.user.id);
-      res.status(200).json({ user });
+      res.status(HttpStatus.OK).json({ user });
     } catch (error) {
       next(error);
     }
