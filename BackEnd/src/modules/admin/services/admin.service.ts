@@ -1,13 +1,15 @@
-import { adminRepository, IAdminRepository } from "../repositories/admin.repository";
+import { adminRepository} from "../repositories/admin.repository";
+import { IAdminRepository} from "../repositories/admin.repository.interface";
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { compareValue, hashValue } from "../../../common/utils/bcrypt";
 import { SuperAdminLoginInput } from "../validators/admin.validation";
-import { IAdminAuthResponse, IAdminAuthUser, mapAdminAuthUser } from "../mappers/admin.mapper";
+import {  mapAdminAuthUser } from "../mappers/admin.mapper";
+import {IAdminAuthResponse, IAdminAuthUser} from "../mappers/admin.mappers.interfaces"
 import { IPasswordActor } from "../../../common/contracts/actorContracts";
 import { generateAccessToken,generateRefreshToken } from "../../../common/utils/jwt";
 import { ActorType } from "../../../common/types";
 import { mapAdminLoginResponse } from "../mappers/admin.mapper";
-import { IAdmin } from "../model/admin.model";
+import { IAdmin } from "../model/admin.model.interface";
 import { DUMMY_PASSWORD_HASH } from "../../../common/constants/constants";
 import { verifyRefreshToken } from "../../../common/utils/jwt";
 interface AuthTokens {

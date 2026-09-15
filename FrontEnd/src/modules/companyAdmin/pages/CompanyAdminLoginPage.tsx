@@ -10,7 +10,7 @@ export const CompanyAdminLoginPage = () => {
   const { register, formState: { errors } } = form;
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-12 text-slate-900">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100 px-6 py-12 text-slate-900">
       <section className="mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl md:grid-cols-2">
         <div className="flex flex-col justify-between bg-indigo-600 p-8 text-white md:p-12">
           <div>

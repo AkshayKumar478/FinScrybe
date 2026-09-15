@@ -7,26 +7,7 @@ import {
   accessTokenCookieOptions,
   refreshTokenCookieOptions,
 } from "../../../common/utils/cookies";
-
-interface IAdminController{
-  login(req: Request, res: Response, next: NextFunction): Promise<void>
-    refreshToken(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-
-  logout(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-  getCurrentAdmin(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-}
+import IAdminController from './admin.controller.Interface'
 class AdminController implements IAdminController {
   constructor(private readonly adminService: IAdminService) { 
 

@@ -1,19 +1,10 @@
-import {BaseRepository,IBaseRepository } from "../../../common/base/base.repository";
-import { QueryOptions,Model } from "mongoose";
-import {Admin, IAdmin } from "../model/admin.model";
+import {BaseRepository} from "../../../common/base/base.repository";
+import {Admin } from "../model/admin.model";
+import { IAdmin} from"../model/admin.model.interface"
 import { promises } from "dns";
+import{IAdminRepository} from './admin.repository.interface'
 
 
-export interface IAdminRepository extends BaseRepository<IAdmin>  {
-
-  findAll(): Promise<IAdmin[]>;
-
-  findByEmail(email: string): Promise<IAdmin | null>;
-  findByEmailWithPassword(email: string): Promise<IAdmin | null>;
-  updateLastLogin(id: string, lastLogin: Date): Promise<IAdmin | null>;
-  updatePassword(id:string,password:string): Promise<IAdmin|null>
-
-}
 
 export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRepository 
 {
