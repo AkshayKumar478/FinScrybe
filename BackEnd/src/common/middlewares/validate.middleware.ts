@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ZodIssue, ZodTypeAny } from "zod";
 
 import { AppError } from "../errors/AppError";
+import {HttpStatus} from '../constants/httpstatus'
 
 type ValidationSchemas = {
   body?: ZodTypeAny;
@@ -30,7 +31,7 @@ export const validateMiddleware = (
     } catch (error) {
       if (isZodError(error)) {
         return next(
-          new AppError("Validation failed", 400, {
+          new AppError("Validation failed", HttpStatus.BAD_REQUEST, {
             errors: error.issues.map(formatValidationIssue),
           })
         );

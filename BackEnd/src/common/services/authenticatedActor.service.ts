@@ -1,28 +1,16 @@
 import { ActorType } from "../types";
 import { adminRepository } from "../../modules/admin/repositories/admin.repository";
+import {IAdminRepository} from '../../modules/admin/repositories/admin.repository.interface'
 import { companyAdminRepository } from "../../modules/companyAdmin/repositories/companyAdmin.repository";
-import { accountantRepository } from "../../modules/companyAccountant/repositories/accountant.repository";
-import { ICompanyAdmin } from "../../modules/companyAdmin/model/model";
-import { IAccountant } from "../../modules/companyAccountant/model/accountantModel";
-import { IAdmin } from "../../modules/admin/model/admin.model.interface";
-
-export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
-
-export interface IAuthenticatedActorService {
-  findActor(actorType: ActorType, id: string): Promise<AuthActor | null>;
-  findActorByEmail(
-    actorType: ActorType,
-    email: string
-  ): Promise<AuthActor | null>;
-  findActorById(
-    actorType: ActorType,
-    actorId: string
-  ): Promise<AuthActor | null>;
-}
-
+import { ICompanyAdminRepository } from "../../modules/companyAdmin/repositories/companyAdmin.repository.interface";
+import { accountantRepository, type IAccountantRepository } from "../../modules/companyAccountant/repositories/accountant.repository";
+import {IAuthenticatedActorService,AuthActor }from './authenticatedActor.service.interface'
 export class AuthenticatedActorService
   implements IAuthenticatedActorService
 {
+  constructor(private readonly adminRepository:IAdminRepository,companyAdminRepository:ICompanyAdminRepository, accountantRepository:IAccountantRepository){}
+
+  
   async findActor(
     actorType: ActorType,
     id: string
@@ -36,7 +24,7 @@ export class AuthenticatedActorService
   ): Promise<AuthActor | null> {
     switch (actorType) {
       case ActorType.ADMIN:
-        return adminRepository.findByEmail(email);
+        return this.adminRepository.findByEmail(email);
       case ActorType.COMPANY_ADMIN:
         return companyAdminRepository.findByEmail(email);
       case ActorType.ACCOUNTANT:
@@ -52,7 +40,7 @@ export class AuthenticatedActorService
   ): Promise<AuthActor | null> {
     switch (actorType) {
       case ActorType.ADMIN:
-        return adminRepository.findById(actorId);
+        return this.adminRepository.findById(actorId);
       case ActorType.COMPANY_ADMIN:
         return companyAdminRepository.findById(actorId);
       case ActorType.ACCOUNTANT:
@@ -65,4 +53,4 @@ export class AuthenticatedActorService
 
 
 
-export const authenticatedActorService=new AuthenticatedActorService()
+export const authenticatedActorService=new AuthenticatedActorService( adminRepository,companyAdminRepository,accountantRepository)

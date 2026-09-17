@@ -1,7 +1,9 @@
 import { AppError } from "./AppError";
+import {HttpStatus} from '../constants/httpstatus'
+import {ErrorMessage} from '../constants/messages'
 
 export class ForbiddenError extends AppError {
-  constructor(message = "Forbidden") {
-    super(message, 403);
+  constructor(message:string) {
+    super(message, HttpStatus.FORBIDDEN);
   }
 }

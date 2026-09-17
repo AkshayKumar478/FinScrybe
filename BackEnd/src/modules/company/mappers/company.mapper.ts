@@ -1,39 +1,8 @@
-import { ICompany } from "../model/model";
+import { ICompany } from "../model/model.interface";
 import { CompanyStatus } from "../../../common/types";
 import { ICompanySummary } from "../contracts";
 import { IActiveActor } from "../../../common/contracts/actorContracts";
-export interface CompanyDto {
-  id: string;
-  companyName: string;
-  industry: string;
-  companyEmail: string;
-  companyPhone: string;
-  companyAdminId?: string;
-  status: string;
-  approvedBy?: string;
-  approvedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface AuthCompanyResponse {
-  id: string;
-  companyName: string;
-  companyEmail: string;
-  status: CompanyStatus;
-}
-
-export interface CompanyRegistrationResponse {
-  message: string;
-  company: AuthCompanyResponse;
-  companyAdmin: {
-    id: string;
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-  };
-}
-
+import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse} from './company.mapper.interface'
 
 
 export function mapCompany(company: ICompany): CompanyDto {

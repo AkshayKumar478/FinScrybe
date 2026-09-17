@@ -3,31 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { companyService, ICompanyService } from "../services/company.service";
 import {HttpStatus } from '../../../common/constants/httpstatus'
- 
-export interface ICompanyController {
-  registerCompany(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-  listAll(req: Request, res: Response, next: NextFunction): Promise<void>;
-  listPending(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-  getCurrentCompany(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-  getById(req: Request, res: Response, next: NextFunction): Promise<void>;
-  updateStatus(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-}
+import {ICompanyController} from './company.controller.interface' 
+
 
 class CompanyController implements ICompanyController {
   constructor(private readonly service: ICompanyService) {}

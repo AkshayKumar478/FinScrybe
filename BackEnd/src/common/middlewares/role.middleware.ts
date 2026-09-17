@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { ForbiddenError } from "../errors/ForbiddenError";
 import { ActorType, CompanyAdminRole } from "../types";
+import {AuthorizationMessage} from '../constants/messages'
 
 type AuthorizationOptions = {
   actorTypes: ActorType[];
@@ -15,11 +16,11 @@ export const roleMiddleware = (
 
   return (req: Request, _res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new ForbiddenError("Authentication is required"));
+      return next(new ForbiddenError(AuthorizationMessage.AUTHENTICATION_REQUIRED));
     }
 
     if (!options.actorTypes.includes(req.user.actorType)) {
-      return next(new ForbiddenError("You do not have access to this resource"));
+      return next(new ForbiddenError(AuthorizationMessage.ACTOR_TYPE_NOT_ALLOWED));
     }
 
     if (
@@ -28,7 +29,7 @@ export const roleMiddleware = (
       (!req.user.companyAdminRole ||
         !options.companyAdminRoles.includes(req.user.companyAdminRole))
     ) {
-      return next(new ForbiddenError("You do not have permission for this action"));
+      return next(new ForbiddenError(AuthorizationMessage.PERMISSION_DENIED));
     }
 
     next();

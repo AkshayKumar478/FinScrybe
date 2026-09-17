@@ -8,6 +8,8 @@ import {
   refreshTokenCookieOptions,
 } from "../../../common/utils/cookies";
 import IAdminController from './admin.controller.Interface'
+import {SuperAdminMessage,JwtMessage} from '../../../common/constants/messages'
+import { jwt } from "zod";
 class AdminController implements IAdminController {
   constructor(private readonly adminService: IAdminService) { 
 
@@ -49,7 +51,7 @@ class AdminController implements IAdminController {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      throw new UnauthorizedError("Refresh token is required");
+      throw new UnauthorizedError(JwtMessage.REFRESH_TOKEN_REQUIRED);
     }
 
     const tokens = await this.adminService.refreshToken(refreshToken);
@@ -67,7 +69,7 @@ class AdminController implements IAdminController {
       )
       .status(HttpStatus.OK)
       .json({
-        message: "Token refreshed",
+        message: JwtMessage.Token_REFRESHED,
       });
   } catch (error) {
     next(error);
@@ -84,7 +86,7 @@ class AdminController implements IAdminController {
       .clearCookie("refreshToken")
       .status(200)
       .json({
-        message: "Logout successful",
+        message: SuperAdminMessage.LOGOUT_SUCCESS,
       });
   } catch (error) {
     next(error);
@@ -98,7 +100,7 @@ class AdminController implements IAdminController {
   ): Promise<void> {
     try {
       if (!req.user?.id) {
-        throw new UnauthorizedError("Authentication is required");
+        throw new UnauthorizedError(JwtMessage.AUTHENTICATION_REQUIRED);
       }
 
       const user = await this.adminService.getCurrentAdmin(req.user.id);

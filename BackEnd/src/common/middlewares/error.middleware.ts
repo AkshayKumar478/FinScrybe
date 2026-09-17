@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import {HttpStatus} from '../constants/httpstatus'
+import {ValidationMessage,DatabaseMessage, JwtMessage, GeneralMessage} from '../constants/messages'
+
 
 import { AppError } from "../errors/AppError";
 import { env } from "../../config/env";
@@ -20,9 +23,9 @@ export const errorMiddleware = (
   }
 
   if (isZodError(err)) {
-    return res.status(400).json({
+    return res.status(HttpStatus.BAD_REQUEST).json({
       success: false,
-      message: "Validation failed",
+      message: ValidationMessage,
       errors: err.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -31,9 +34,9 @@ export const errorMiddleware = (
   }
 
   if (err instanceof mongoose.Error.ValidationError) {
-    return res.status(400).json({
+    return res.status(HttpStatus.BAD_REQUEST).json({
       success: false,
-      message: "Database validation failed",
+      message: DatabaseMessage.VALIDATION_FAILED,
       errors: Object.values(err.errors).map((issue) => ({
         field: issue.path,
         message: issue.message,
@@ -44,10 +47,10 @@ export const errorMiddleware = (
   if (isDuplicateKeyError(err)) {
     return res.status(409).json({
       success: false,
-      message: "Duplicate value violates a unique constraint",
+      message: DatabaseMessage.DUPLICATE_VALUE,
       errors: Object.keys(err.keyValue ?? {}).map((field) => ({
         field,
-        message: `${field} already exists`,
+        message: `${field} ${DatabaseMessage.FIELD_ALREADY_EXISTS}`,
       })),
     });
   }
@@ -56,16 +59,16 @@ export const errorMiddleware = (
     err instanceof jwt.JsonWebTokenError ||
     err instanceof jwt.TokenExpiredError
   ) {
-    return res.status(401).json({
+    return res.status(HttpStatus.UNAUTHORIZED).json({
       success: false,
-      message: "Invalid or expired token",
+      message:JwtMessage.INVALID_OR_EXPIRED_TOKEN,
       errors: null,
     });
   }
 
   const payload: Record<string, unknown> = {
     success: false,
-    message: "Internal server error",
+    message: GeneralMessage.INTERNAL_SERVER_ERROR,
     errors: null,
   };
 
@@ -74,7 +77,7 @@ export const errorMiddleware = (
     payload.stack = err.stack;
   }
 
-  return res.status(500).json(payload);
+  return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(payload);
 };
 
 const isZodError = (
@@ -91,10 +94,10 @@ const isZodError = (
 const isDuplicateKeyError = (
   error: unknown
 ): error is mongoose.mongo.MongoServerError & {
-  keyValue?: Record<string, unknown>;
+  keyValue?: Record<string,string>;
 } => {
   return (
     error instanceof mongoose.mongo.MongoServerError &&
-    error.code === 11000
+    error.code === HttpStatus.MONGOOSE_DUPLICATE_KEY_ERROR
   );
 };

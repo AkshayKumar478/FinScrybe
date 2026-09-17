@@ -14,7 +14,7 @@ import { DUMMY_PASSWORD_HASH } from "../../../common/constants/constants";
 import { verifyRefreshToken } from "../../../common/utils/jwt";
 import {IAdminService} from './admin.service.interface'
 import {AuthTokens} from './admin.service.interface'
-
+import {SuperAdminMessage,JwtMessage} from '../../../common/constants/messages'
 class AdminService implements IAdminService{
   constructor(private readonly repository: IAdminRepository) {}
 
@@ -59,7 +59,7 @@ private buildAuthResponse({
     const isPasswordValid = await compareValue(password, hashToCompare);
 
     if (!user || !isPasswordValid) {
-      throw new UnauthorizedError("Invalid email or password");
+      throw new UnauthorizedError(SuperAdminMessage.INVALID_CREDENTIALS);
     }
 
     return user;
@@ -81,7 +81,7 @@ private buildAuthResponse({
         .catch(() => undefined);
   
       return this.buildAuthResponse({
-        message: "Super admin login successful",
+        message: SuperAdminMessage.LOGIN_SUCCESS,
         user: admin,
       });
     }
@@ -92,7 +92,7 @@ private buildAuthResponse({
   const admin = await this.repository.findById(payload.id);
 
   if (!admin) {
-    throw new UnauthorizedError("Invalid refresh token");
+    throw new UnauthorizedError(JwtMessage.INVALID_REFRESH_TOKEN);
   }
 
   return this.generateTokens(admin._id.toString());
@@ -102,7 +102,7 @@ private buildAuthResponse({
     const admin = await this.repository.findById(adminId);
 
     if (!admin) {
-      throw new UnauthorizedError("Authenticated admin no longer exists");
+      throw new UnauthorizedError(SuperAdminMessage.AUTHENTICATED_USER_NOT_FOUND);
     }
 
     return mapAdminAuthUser(admin);

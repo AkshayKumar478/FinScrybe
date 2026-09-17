@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { ICompanyAdmin } from "../../modules/companyAdmin/model/model";
 import { verifyAccessToken } from "../utils/jwt";
+import {JwtMessage} from '../constants/messages'
+
 
 import { authenticatedActorService, AuthenticatedActorService } from "../services/authenticatedActor.service";
 
@@ -16,7 +18,7 @@ import { authenticatedActorService, AuthenticatedActorService } from "../service
   const token = req.cookies.accessToken;
 
   if (!token) {
-    throw new UnauthorizedError("Access token is required");
+    throw new UnauthorizedError(JwtMessage.ACCESS_TOKEN_REQUIRED);
   }
     const payload = verifyAccessToken(token);
     const actor = await authenticatedActorService.findActorById(
@@ -25,7 +27,7 @@ import { authenticatedActorService, AuthenticatedActorService } from "../service
     );
 
     if (!actor) {
-      throw new UnauthorizedError("Authenticated user no longer exists");
+      throw new UnauthorizedError(JwtMessage.AUTHENTICATED_USER_NOT_FOUND);
     }
 
 
@@ -47,6 +49,6 @@ import { authenticatedActorService, AuthenticatedActorService } from "../service
       return next(error);
     }
 
-    next(new UnauthorizedError("Invalid or expired access token"));
+    next(new UnauthorizedError(JwtMessage.INVALID_OR_EXPIRED_ACCESS_TOKEN));
   }
 };
