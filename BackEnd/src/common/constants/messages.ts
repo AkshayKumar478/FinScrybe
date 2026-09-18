@@ -4,16 +4,37 @@
 
 export enum CompanyRegistrationMessage {
   REGISTRATION_SUCCESS = "Company registered successfully",
+  REGISTRATION_SUBMITTED_SUCCESS = "Company registration submitted successfully",
   REGISTRATION_FAILED = "Company registration failed",
 
+  COMPANY_REGISTRATION_TRANSACTION_INCOMPLETE = "Company registration transaction did not complete",
+
   COMPANY_ALREADY_EXISTS = "Company already exists",
+  COMPANY_ID_REQUIRED = "Company id is required",
+  COMPANY_NOT_FOUND = "Company not found",
   EMAIL_ALREADY_EXISTS = "Email already exists",
-  PHONE_ALREADY_EXISTS = "Phone number already exists",
+  PHONE_ALREADY_EXISTS = "Phone number already exists",   
+  COMPANY_OR_COMPANY_ADMIN_EXISTS= "Company or company admin already exists",
+
 
   PENDING_APPROVAL = "Company registration is pending approval",
   APPROVED = "Company registration approved successfully",
   REJECTED = "Company registration rejected",
 }
+
+export enum CompanyValidation {
+  COMPANY_NAME_REQUIRED = "Company name is required",
+  COMPANY_PHONE_REQUIRED = "Company phone is required",
+  INDUSTRY_REQUIRED="Industry is required",
+  COMPANY_VALID_EMAIL = "A valid company email is required",
+  EMAIL_ALREADY_EXISTS = "Email already exists",
+  PHONE_ALREADY_EXISTS = "Phone number already exists",   
+  COMPANY_OR_COMPANY_ADMIN_EXISTS= "Company or company admin already exists",
+ 
+
+
+}
+
 
 
 
@@ -39,13 +60,17 @@ export enum SuperAdminMessage {
 
 export enum CompanyAdminMessage {
   
+  COMPANY_ADMIN_FULL_NAME = "Admin full name is required",
   LOGIN_SUCCESS = "Company admin login successful",
   LOGIN_FAILED = "Company admin login failed",
   INVALID_CREDENTIALS = "Invalid email or password",
+  VALID_EMAIL_REQUIRED = "A valid admin email is required",
   NOT_FOUND = "Company admin not found",
-
+  COMPANY_ADMIN_EMAIL_ALREADY_REGISTERED = "Company  admin email already registered",
+  COMPANY_ADMIN_NOT_LINKED = "Company admin is not linked to a company",
   ACCOUNT_NOT_APPROVED = "Company admin account is not approved",
   ACCOUNT_INACTIVE = "Company admin account is inactive",
+  
 
   
   LOGOUT_SUCCESS = "Company admin logout successful",
@@ -85,8 +110,8 @@ export enum AccountantMessage {
   INVITATION_ALREADY_ACCEPTED =
     "Accountant invitation has already been accepted",
 
-  ACCOUNTANT_ALREADY_EXISTS =
-    "An accountant with this email already exists",
+  ACCOUNTANT_ALREADY_EXISTS = "An accountant with this email already exists",
+  ACCOUNTANT_COMPANY_NOT_LINKED = "Accountant is not linked to a company",
 }
 
 
@@ -169,6 +194,7 @@ export enum GeneralMessage {
 
   ACCESS_DENIED = "Access denied",
   FORBIDDEN = "You do not have permission to perform this action",
+  ACTOR_HAS_NO_SCOPED_COMPANY="This actor type has no scoped company"
 }
 
 

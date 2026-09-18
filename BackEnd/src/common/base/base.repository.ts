@@ -102,4 +102,3 @@ export class BaseRepository<TDocument extends Document> implements IBaseReposito
   }
 }
 
-export const baseRepository=new BaseRepository(Model)

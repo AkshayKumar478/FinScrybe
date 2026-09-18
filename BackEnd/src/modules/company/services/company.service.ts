@@ -14,6 +14,7 @@ import mongoose from "mongoose";
 import { authenticatedActorService } from "../../../common/services/authenticatedActor.service";
 import { CompanyRegistrationInput } from  "../validators/company.validation";
 import { ConflictError } from "../../../common/errors/ConflictError";
+import {CompanyAdminMessage, CompanyRegistrationMessage ,AccountantMessage, GeneralMessage} from '../../../common/constants/messages'
 
 import { hashValue } from "../../../common/utils/bcrypt";
 
@@ -47,11 +48,11 @@ class CompanyService implements ICompanyService {
       ]);
   
       if (existingCompany) {
-        throw new ConflictError("Company email is already registered");
+        throw new ConflictError(CompanyRegistrationMessage.COMPANY_ALREADY_EXISTS);
       }
   
       if (existingCompanyAdmin) {
-        throw new ConflictError("Company admin email is already registered");
+        throw new ConflictError(CompanyAdminMessage.COMPANY_ADMIN_EMAIL_ALREADY_REGISTERED);
       }
     }
   
@@ -89,13 +90,13 @@ class CompanyService implements ICompanyService {
       });
 
       if (!company || !companyAdmin) {
-        throw new Error("Company registration transaction did not complete");
+        throw new Error(CompanyRegistrationMessage.COMPANY_REGISTRATION_TRANSACTION_INCOMPLETE);
       }
 
       return { company, companyAdmin };
     } catch (error) {
       if (isDuplicateKeyError(error)) {
-        throw new ConflictError("Company or company admin already exists");
+        throw new ConflictError(CompanyRegistrationMessage.COMPANY_OR_COMPANY_ADMIN_EXISTS);
       }
 
       throw error;
@@ -146,7 +147,7 @@ class CompanyService implements ICompanyService {
     const company = await this.repository.findById(companyId);
 
     if (!company) {
-      throw new NotFoundError("Company not found");
+      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
     }
 
     return mapCompany(company);
@@ -159,7 +160,7 @@ class CompanyService implements ICompanyService {
     const company = await this.resolveCompanyForActor(actorType, actorId);
 
     if (!company) {
-      throw new NotFoundError("Company not found");
+      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
     }
 
     return mapCompany(company);
@@ -173,7 +174,7 @@ class CompanyService implements ICompanyService {
     const company = await this.repository.findById(companyId);
 
     if (!company) {
-      throw new NotFoundError("Company not found");
+      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
     }
 
     const nextApprovedBy =
@@ -189,7 +190,7 @@ class CompanyService implements ICompanyService {
     );
 
     if (!updatedCompany) {
-      throw new NotFoundError("Company not found");
+      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
     }
 
     return mapCompany(updatedCompany);
@@ -203,7 +204,7 @@ class CompanyService implements ICompanyService {
       const actor = await authenticatedActorService.findActorById(actorType, actorId);
 
       if (!actor || !("companyId" in actor)) {
-        throw new ForbiddenError("Company admin is not linked to a company");
+        throw new ForbiddenError(CompanyAdminMessage.COMPANY_ADMIN_NOT_LINKED);
       }
 
       return this.repository.findById(actor.companyId.toString());
@@ -213,13 +214,13 @@ class CompanyService implements ICompanyService {
       const actor = await authenticatedActorService.findActorById(actorType, actorId);
 
       if (!actor || !("companyId" in actor)) {
-        throw new ForbiddenError("Accountant is not linked to a company");
+        throw new ForbiddenError(AccountantMessage.ACCOUNTANT_COMPANY_NOT_LINKED);
       }
 
       return this.repository.findById(actor.companyId.toString());
     }
 
-    throw new ForbiddenError("This actor type has no scoped company");
+    throw new ForbiddenError(GeneralMessage.ACTOR_HAS_NO_SCOPED_COMPANY);
   }
 }
 

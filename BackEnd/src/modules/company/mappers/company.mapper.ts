@@ -3,6 +3,7 @@ import { CompanyStatus } from "../../../common/types";
 import { ICompanySummary } from "../contracts";
 import { IActiveActor } from "../../../common/contracts/actorContracts";
 import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse} from './company.mapper.interface'
+import {CompanyRegistrationMessage} from '../../../common/constants/messages'
 
 
 export function mapCompany(company: ICompany): CompanyDto {
@@ -35,7 +36,7 @@ export function mapCompanyRegistrationResponse(
   companyAdmin: IActiveActor
 ): CompanyRegistrationResponse {
   return {
-    message: "Company registration submitted successfully",
+    message: CompanyRegistrationMessage.REGISTRATION_SUBMITTED_SUCCESS ,
     company: mapCompanySummary(company),
     companyAdmin: {
       id: companyAdmin._id.toString(),

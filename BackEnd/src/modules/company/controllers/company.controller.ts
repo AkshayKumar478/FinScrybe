@@ -4,6 +4,7 @@ import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { companyService, ICompanyService } from "../services/company.service";
 import {HttpStatus } from '../../../common/constants/httpstatus'
 import {ICompanyController} from './company.controller.interface' 
+import { JwtMessage} from '../../../common/constants/messages'
 
 
 class CompanyController implements ICompanyController {
@@ -52,7 +53,7 @@ class CompanyController implements ICompanyController {
   ): Promise<void> {
     try {
       if (!req.user?.id || !req.user.actorType) {
-        throw new UnauthorizedError("Authentication is required");
+        throw new UnauthorizedError(JwtMessage.AUTHENTICATION_REQUIRED);
       }
 
       const response = await this.service.getCurrentUsersCompany(
@@ -82,7 +83,7 @@ class CompanyController implements ICompanyController {
   ): Promise<void> {
     try {
       if (!req.user?.id) {
-        throw new UnauthorizedError("Authentication is required");
+        throw new UnauthorizedError(JwtMessage.AUTHENTICATION_REQUIRED);
       }
 
       const response = await this.service.updateStatus(
