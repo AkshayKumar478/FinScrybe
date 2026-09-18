@@ -11,6 +11,8 @@ export interface ICompanyRepository extends IBaseRepository<ICompany> {
     companyEmail: string
   ): Promise<ICompany | null>;
 
+  findByGstin(gstin: string): Promise<ICompany | null>;
+
 
   findByCompanyAdminId(
     companyAdminId: string | Types.ObjectId

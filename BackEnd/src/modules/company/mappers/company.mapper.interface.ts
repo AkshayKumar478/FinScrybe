@@ -7,6 +7,7 @@ export interface CompanyDto {
   industry: string;
   companyEmail: string;
   companyPhone: string;
+  gstin: string;
   companyAdminId?: string;
   status: string;
   approvedBy?: string;
@@ -19,6 +20,7 @@ export interface AuthCompanyResponse {
   id: string;
   companyName: string;
   companyEmail: string;
+  gstin: string;
   status: CompanyStatus;
 }
 

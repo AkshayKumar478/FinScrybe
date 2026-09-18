@@ -10,6 +10,7 @@ export enum CompanyRegistrationMessage {
   COMPANY_REGISTRATION_TRANSACTION_INCOMPLETE = "Company registration transaction did not complete",
 
   COMPANY_ALREADY_EXISTS = "Company already exists",
+  GSTIN_ALREADY_REGISTERED = "GSTIN is already registered",
   COMPANY_ID_REQUIRED = "Company id is required",
   COMPANY_NOT_FOUND = "Company not found",
   EMAIL_ALREADY_EXISTS = "Email already exists",
@@ -27,6 +28,8 @@ export enum CompanyValidation {
   COMPANY_PHONE_REQUIRED = "Company phone is required",
   INDUSTRY_REQUIRED="Industry is required",
   COMPANY_VALID_EMAIL = "A valid company email is required",
+  GSTIN_REQUIRED = "GSTIN is required",
+  GSTIN_INVALID = "Enter a valid 15-character GSTIN",
   EMAIL_ALREADY_EXISTS = "Email already exists",
   PHONE_ALREADY_EXISTS = "Phone number already exists",   
   COMPANY_OR_COMPANY_ADMIN_EXISTS= "Company or company admin already exists",

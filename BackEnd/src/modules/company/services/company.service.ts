@@ -42,9 +42,10 @@ class CompanyService implements ICompanyService {
    private async assertCompanyRegistrationAvailability(
       payload: CompanyRegistrationInput
     ): Promise<void> {
-      const [existingCompany, existingCompanyAdmin] = await Promise.all([
+      const [existingCompany, existingCompanyAdmin, existingGstin] = await Promise.all([
         this.repository.findCompanyByEmail(payload.companyEmail),
         this.companyAdminRepo.findByEmail(payload.adminEmail),
+        this.repository.findByGstin(payload.gstin),
       ]);
   
       if (existingCompany) {
@@ -53,6 +54,10 @@ class CompanyService implements ICompanyService {
   
       if (existingCompanyAdmin) {
         throw new ConflictError(CompanyAdminMessage.COMPANY_ADMIN_EMAIL_ALREADY_REGISTERED);
+      }
+
+      if (existingGstin) {
+        throw new ConflictError(CompanyRegistrationMessage.GSTIN_ALREADY_REGISTERED);
       }
     }
   
@@ -119,6 +124,7 @@ class CompanyService implements ICompanyService {
             industry: payload.industry,
             companyEmail: payload.companyEmail,
             companyPhone: payload.companyPhone,
+            gstin: payload.gstin,
           },
           companyAdmin: {
             fullName: payload.adminFullName,

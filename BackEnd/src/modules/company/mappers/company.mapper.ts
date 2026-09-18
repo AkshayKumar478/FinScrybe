@@ -13,6 +13,7 @@ export function mapCompany(company: ICompany): CompanyDto {
     industry: company.industry,
     companyEmail: company.companyEmail,
     companyPhone: company.companyPhone,
+    gstin: company.gstin,
     companyAdminId: company.companyAdminId?.toString(),
     status: company.status,
     approvedBy: company.approvedBy?.toString(),
@@ -28,6 +29,7 @@ export function mapCompanySummary(
     id: company._id.toString(),
     companyName: company.companyName,
     companyEmail: company.companyEmail,
+    gstin: company.gstin,
     status: company.status,
   };
 }

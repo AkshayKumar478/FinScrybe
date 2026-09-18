@@ -21,6 +21,10 @@ export class CompanyRepository
     return this.findOne({ companyEmail });
   }
 
+  async findByGstin(gstin: string): Promise<ICompany | null> {
+    return this.findOne({ gstin });
+  }
+
   async findByCompanyAdminId(
     companyAdminId: string | Types.ObjectId
   ): Promise<ICompany | null> {

@@ -7,6 +7,7 @@ export interface ICompany extends Document {
   industry: string;
   companyEmail: string;
   companyPhone: string;
+  gstin: string;
 
   companyAdminId?: Types.ObjectId;
 

@@ -11,6 +11,7 @@ export interface ICompanySummary {
   _id: Types.ObjectId;
   companyName: string;
   companyEmail: string;
+  gstin: string;
   status: CompanyStatus;
 }
 
@@ -20,6 +21,7 @@ export interface ICompanyRegistrationPayload {
     industry: string;
     companyEmail: string;
     companyPhone: string;
+    gstin: string;
   };
   companyAdmin: {
     fullName: string;

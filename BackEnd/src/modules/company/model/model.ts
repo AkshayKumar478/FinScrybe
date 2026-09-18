@@ -32,6 +32,15 @@ const companySchema = new Schema<ICompany>(
       trim: true,
     },
 
+    gstin: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+      index: true,
+    },
+
     companyAdminId: {
       type: Schema.Types.ObjectId,
       ref: "CompanyAdmin",

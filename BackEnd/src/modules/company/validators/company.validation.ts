@@ -10,7 +10,16 @@ export const companyRegistrationSchema = z.object({
     .email(CompanyValidation.COMPANY_VALID_EMAIL)
     .trim()
     .toLowerCase(),
-  companyPhone: z.string().trim().min(1, CompanyValidation.COMPANY_PHONE_REQUIRED),
+  companyPhone: z.string().trim().min(10, CompanyValidation.COMPANY_PHONE_REQUIRED),
+  gstin: z
+    .string()
+    .trim()
+    .min(1, CompanyValidation.GSTIN_REQUIRED)
+    .toUpperCase()
+    .regex(
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/,
+      CompanyValidation.GSTIN_INVALID
+    ),
   adminFullName: z
     .string()
     .trim()
