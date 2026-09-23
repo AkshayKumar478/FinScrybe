@@ -2,7 +2,7 @@ import { ICompany } from "../model/model.interface";
 import { CompanyStatus } from "../../../common/types";
 import { ICompanySummary } from "../contracts";
 import { IActiveActor } from "../../../common/contracts/actorContracts";
-import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse} from './company.mapper.interface'
+import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse,RegistrationStartResponse} from './company.mapper.interface'
 import {CompanyRegistrationMessage} from '../../../common/constants/messages'
 
 
@@ -33,6 +33,16 @@ export function mapCompanySummary(
     status: company.status,
   };
 }
+
+export function mapRegistrationStartResponse(
+  registrationId: string,
+  message: string
+): RegistrationStartResponse {
+  return {
+    registrationId,
+    message,
+  };
+}
 export function mapCompanyRegistrationResponse(
   company: ICompanySummary,
   companyAdmin: IActiveActor
@@ -48,6 +58,7 @@ export function mapCompanyRegistrationResponse(
     },
   };
 }
+
 
 export function mapCompanies(companies: ICompany[]): CompanyDto[] {
   return companies.map(mapCompany);

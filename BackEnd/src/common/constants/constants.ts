@@ -3,5 +3,7 @@ export const DUMMY_PASSWORD_HASH =
 
   export const OtpValues={
     min:100000,
-    max:1000000
+    max:1000000,
+    expiresInMinutes:7,
+    maxAttempts:5
   }

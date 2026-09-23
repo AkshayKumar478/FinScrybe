@@ -21,6 +21,7 @@ export enum CompanyRegistrationMessage {
   PENDING_APPROVAL = "Company registration is pending approval",
   APPROVED = "Company registration approved successfully",
   REJECTED = "Company registration rejected",
+  REGISTRATION_Started_message="Registration started. Please verify your email using the OTP sent to your email address."
 }
 
 export enum CompanyValidation {
@@ -33,8 +34,8 @@ export enum CompanyValidation {
   EMAIL_ALREADY_EXISTS = "Email already exists",
   PHONE_ALREADY_EXISTS = "Phone number already exists",   
   COMPANY_OR_COMPANY_ADMIN_EXISTS= "Company or company admin already exists",
- 
-
+  
+   
 
 }
 

@@ -34,4 +34,10 @@ export interface CompanyRegistrationResponse {
     phoneNumber: string;
   };
 }
-
+export interface RegistrationOtpVerificationResponse {
+  message: string;
+}
+export interface RegistrationStartResponse {
+  registrationId: string;
+  message: string;
+}

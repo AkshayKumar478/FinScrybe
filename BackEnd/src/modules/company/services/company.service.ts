@@ -15,29 +15,24 @@ import { authenticatedActorService } from "../../../common/services/actorService
 import { CompanyRegistrationInput } from  "../validators/company.validation";
 import { ConflictError } from "../../../common/errors/ConflictError";
 import {CompanyAdminMessage, CompanyRegistrationMessage ,AccountantMessage, GeneralMessage} from '../../../common/constants/messages'
-
+import {ICompanyService} from './company.service.interface'
 import { hashValue } from "../../../common/utils/bcrypt";
-
-export interface ICompanyService {
-  registerCompany(
-    payload: CompanyRegistrationInput
-  ): Promise<CompanyRegistrationResponse>;
-  listAll(): Promise<CompanyDto[]>;
-  listPending(): Promise<CompanyDto[]>;
-  getById(companyId: string): Promise<CompanyDto>;
-  getCurrentUsersCompany(
-    actorType: ActorType,
-    actorId: string
-  ): Promise<CompanyDto>;
-  updateStatus(
-    companyId: string,
-    status: CompanyStatus,
-    approvedBy: string
-  ): Promise<CompanyDto>;
-}
-
+import {IOtpService} from '../../../common/services/OTPService/otp.service.interface'
+import {IEmailService} from '../../../common/services/emailService/email.service.interface'
+import {otpService} from '../../../common/services/OTPService/otp.service'
+import {emailService} from '../../../common/services/emailService/email.service'
+import {IRegistrationRepository } from '../repositories/registrationStaging.repository.interface'
+import {registrationStagingRepository} from '../repositories/registrationStaging.repository'
+import { OtpValues} from "../../../common/constants/constants"
 class CompanyService implements ICompanyService {
-  constructor(private readonly repository: ICompanyRepository,private readonly companyAdminRepo: ICompanyAdminRepository) { }
+  constructor(private readonly repository: ICompanyRepository,
+    private readonly companyAdminRepo: ICompanyAdminRepository,
+    private readonly emailService:IEmailService,
+    private readonly otpService:IOtpService,
+    private readonly  registrationStaging:IRegistrationRepository
+
+    
+  ) { }
   
    private async assertCompanyRegistrationAvailability(
       payload: CompanyRegistrationInput
@@ -110,33 +105,74 @@ class CompanyService implements ICompanyService {
     }
  }
   
-  async registerCompany(
-      payload: CompanyRegistrationInput
-    ): Promise<CompanyRegistrationResponse> {
-      await this.assertCompanyRegistrationAvailability(payload);
-  
-      const hashedPassword = await hashValue(payload.adminPassword);
-  
-      const { company, companyAdmin } =
-        await this.createCompanyRegistration({
-          company: {
-            companyName: payload.companyName,
-            industry: payload.industry,
-            companyEmail: payload.companyEmail,
-            companyPhone: payload.companyPhone,
-            gstin: payload.gstin,
-          },
-          companyAdmin: {
-            fullName: payload.adminFullName,
-            email: payload.adminEmail,
-            password: hashedPassword,
-            phoneNumber: payload.adminPhoneNumber,
-          },
-        });
-  
-      return mapCompanyRegistrationResponse(company, companyAdmin);
-    }
+  async startRegistration(
+    payload:CompanyRegistrationInput
+  ){
+   const hashedPassword=await hashValue(payload.adminPassword)
+     const otp=otpService.generate()
+     const hashedOtp=hashValue(otp)
+      const now=new Date()
+    const otpExpiresAt=new Date(
+      now.getTime()+OtpValues.expiresInMinutes*60*1000
+    )
 
+    const expiresAt =new Date(
+      now.getTime()+60*60*1000
+    )
+
+    const staging=registrationStagingRepository.create({
+     companyName: payload.companyName,
+        industry: payload.industry,
+        companyEmail: payload.companyEmail,
+        companyPhone: payload.companyPhone,
+        gstin: payload.gstin,
+
+        adminFullName: payload.adminFullName,
+        adminEmail: payload.adminEmail,
+        adminPassword: hashedPassword,
+        adminPhoneNumber: payload.adminPhoneNumber,
+
+        otpHash: hashedOtp,
+        otpExpiresAt,
+
+        otpAttempts: 0,
+        emailVerified: false,
+
+        expiresAt,
+
+    
+    })
+    await this.emailService.sendEmail(payload.adminEmail,"Verify your FinScrybe registration",
+      `
+        <div>
+          <h2>FinScrybe Email Verification</h2>
+
+          <p>Hello ${payload.adminFullName},</p>
+
+          <p>
+            Your OTP for completing your FinScrybe company
+            registration is:
+          </p>
+
+          <h1>${otp}</h1>
+
+          <p>
+            This OTP will expire in
+            ${OtpValues.expiresInMinutes} minutes.
+          </p>
+
+          <p>
+            If you did not initiate this registration,
+            you can safely ignore this email.
+          </p>
+        </div>
+      `)
+      return {
+        registrationId:(await staging)._id,
+        message:CompanyRegistrationMessage.REGISTRATION_Started_message
+      }
+
+  }
 
   async listAll(): Promise<CompanyDto[]> {
     const companies = await this.repository.findMany();
@@ -239,4 +275,4 @@ const isDuplicateKeyError = (
   );
 };
 
-export const companyService = new CompanyService(companyRepository,companyAdminRepository);
+export const companyService = new CompanyService(companyRepository,companyAdminRepository,emailService,otpService,registrationStagingRepository);
