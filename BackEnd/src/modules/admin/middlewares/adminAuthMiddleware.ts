@@ -1,7 +1,7 @@
 import { NextFunction,Request,Response } from "express";
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
 import { verifyAccessToken } from "../../../common/utils/jwt";
-import { authenticatedActorService } from "../../../common/services/authenticatedActor.service";
+import { authenticatedActorService } from "../../../common/services/actorServices/authenticatedActor.service";
 import {JwtMessage} from '../../../common/constants/messages'
 import { jwt } from "zod";
 

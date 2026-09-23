@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -13,7 +14,6 @@ import {
 
 import adminAvatar from "../../../assets/admin_avatar.png";
 import { useAuthStore } from "../../../common/stores/authStore";
-import { useAdminDashboardStore } from "../../../common/stores/adminDashboardStore";
 import { PendingCompanies } from "../components/PendingCompanies";
 import { adminApi } from "../api";
 
@@ -29,12 +29,7 @@ const tabLabels: Record<string, string> = {
 export function SuperAdminDashboard() {
   const navigate = useNavigate();
   const logoutSuperAdmin = useAuthStore((state) => state.logoutSuperAdmin);
-  const activeTab = useAdminDashboardStore(
-    (state) => state.superAdminActiveTab,
-  );
-  const setActiveTab = useAdminDashboardStore(
-    (state) => state.setSuperAdminActiveTab,
-  );
+  const [activeTab, setActiveTab] = useState<string>("dashboard");
 
   const handleSelectTab = (tabId: string) => {
     if (tabId === "logout") {

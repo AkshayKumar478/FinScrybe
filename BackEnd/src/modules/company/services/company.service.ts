@@ -11,7 +11,7 @@ import { ICompanyRegistrationPayload, ICompanyRegistrationResult } from "../cont
 import { companyAdminRepository } from "../../companyAdmin/repositories/companyAdmin.repository";
 import { ICompanyAdminRepository } from "../../companyAdmin/repositories/companyAdmin.repository.interface";
 import mongoose from "mongoose";
-import { authenticatedActorService } from "../../../common/services/authenticatedActor.service";
+import { authenticatedActorService } from "../../../common/services/actorServices/authenticatedActor.service";
 import { CompanyRegistrationInput } from  "../validators/company.validation";
 import { ConflictError } from "../../../common/errors/ConflictError";
 import {CompanyAdminMessage, CompanyRegistrationMessage ,AccountantMessage, GeneralMessage} from '../../../common/constants/messages'

@@ -6,10 +6,11 @@ import { companyAdminApi } from "../api";
 export const CompanyAdminDashboard = () => {
   const navigate = useNavigate();
   const companyAdmin = useAuthStore((state) => state.companyAdmin);
+  const logoutCompanyAdmin = useAuthStore((state) => state.logoutCompanyAdmin);
 
   const logout = async () => {
     await companyAdminApi.logout();
-    useAuthStore.getState().logoutCompanyAdmin();
+    logoutCompanyAdmin();
     navigate("/login");
   };
 

@@ -50,8 +50,10 @@ export const useCompanyRegistration = () => {
       setError(null);
       await registerCompany(data);
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+    } catch (err:unknown) {
+     if(err instanceof Error){
+           setError(err.message || "Registration failed. Please try again.");
+     }
     } finally {
       setIsSubmitting(false);
     }

@@ -1,13 +1,20 @@
 import { create } from "zustand";
 import { storage } from "../utils/storage";
 
-interface IClientUser {
+export const AUTH_STORAGE_KEYS = {
+  CLIENT_USER: "clientUser",
+  SUPER_ADMIN: "superAdmin",
+  COMPANY_ADMIN: "companyAdmin",
+} as const;
+
+export interface IClientUser {
   email: string;
   fullName: string;
   role?: string;
   actorType?: string;
 }
-interface ISuperAdmin {
+
+export interface ISuperAdmin {
   id: string;
   email: string;
   fullName: string;
@@ -16,7 +23,7 @@ interface ISuperAdmin {
   profilePhoto?: string;
 }
 
-interface ICompanyAdmin {
+export interface ICompanyAdmin {
   id: string;
   email: string;
   fullName: string;
@@ -24,7 +31,7 @@ interface ICompanyAdmin {
   actorType: "COMPANY_ADMIN";
 }
 
-interface AuthState {
+export interface AuthState {
   clientUser: IClientUser | null;
   superAdmin: ISuperAdmin | null;
   companyAdmin: ICompanyAdmin | null;
@@ -38,60 +45,63 @@ interface AuthState {
   setSuperAdminSessionChecked: (checked: boolean) => void;
 }
 
+function parseStoredJson<T>(key: string): T | null {
+  const saved = storage.getItem(key);
+  if (!saved) {
+    return null;
+  }
+  try {
+    return JSON.parse(saved) as T;
+  } catch (error) {
+    console.warn(`[authStore] Corrupted JSON in storage key "${key}". Clearing stored entry.`, error);
+    storage.removeItem(key);
+    return null;
+  }
+}
+
+function setStoredUser<T>(key: string, user: T | null): void {
+  if (user) {
+    storage.setItem(key, JSON.stringify(user));
+  } else {
+    storage.removeItem(key);
+  }
+}
+
 export const useAuthStore = create<AuthState>((set) => ({
-  clientUser: (() => {
-    const saved = storage.getItem("clientUser");
-    return saved ? JSON.parse(saved) : null;
-  })(),
-  superAdmin: (() => {
-    const saved = storage.getItem("superAdmin");
-    return saved ? JSON.parse(saved) : null;
-  })(),
-  companyAdmin: (() => {
-    const saved = storage.getItem("companyAdmin");
-    return saved ? JSON.parse(saved) : null;
-  })(),
+  clientUser: parseStoredJson<IClientUser>(AUTH_STORAGE_KEYS.CLIENT_USER),
+  superAdmin: parseStoredJson<ISuperAdmin>(AUTH_STORAGE_KEYS.SUPER_ADMIN),
+  companyAdmin: parseStoredJson<ICompanyAdmin>(AUTH_STORAGE_KEYS.COMPANY_ADMIN),
   isSuperAdminSessionChecked: false,
 
   setClientUser: (user) => {
-    if (user) {
-      storage.setItem("clientUser", JSON.stringify(user));
-    } else {
-      storage.removeItem("clientUser");
-    }
+    setStoredUser(AUTH_STORAGE_KEYS.CLIENT_USER, user);
     set({ clientUser: user });
   },
 
   setSuperAdmin: (user) => {
-    if (user) {
-      storage.setItem("superAdmin", JSON.stringify(user));
-    } else {
-      storage.removeItem("superAdmin");
-    }
+    setStoredUser(AUTH_STORAGE_KEYS.SUPER_ADMIN, user);
     set({ superAdmin: user });
   },
 
   setCompanyAdmin: (user) => {
-    if (user) {
-      storage.setItem("companyAdmin", JSON.stringify(user));
-    } else {
-      storage.removeItem("companyAdmin");
-    }
+    setStoredUser(AUTH_STORAGE_KEYS.COMPANY_ADMIN, user);
     set({ companyAdmin: user });
   },
 
   logoutClient: () => {
-    storage.removeItem("clientUser");
+    storage.removeItem(AUTH_STORAGE_KEYS.CLIENT_USER);
     set({ clientUser: null });
   },
 
   logoutSuperAdmin: () => {
-    storage.removeItem("superAdmin");
-    set({ superAdmin: null });
+    storage.removeItem(AUTH_STORAGE_KEYS.SUPER_ADMIN);
+    set({ superAdmin: null, isSuperAdminSessionChecked: true });
   },
+
   logoutCompanyAdmin: () => {
-    storage.removeItem("companyAdmin");
+    storage.removeItem(AUTH_STORAGE_KEYS.COMPANY_ADMIN);
     set({ companyAdmin: null });
   },
+
   setSuperAdminSessionChecked: (checked) => set({ isSuperAdminSessionChecked: checked }),
 }));

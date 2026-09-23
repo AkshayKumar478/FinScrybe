@@ -15,7 +15,7 @@ export function Hero() {
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <Link 
-            to="/register" 
+            to="companies/register" 
             className="px-8 py-3.5 rounded-full text-base font-semibold text-white bg-finscrybe-primary hover:bg-finscrybe-hover shadow-[0_4px_6px_-1px_rgba(99,91,255,0.2)] transition-all"
           >
             Register Company

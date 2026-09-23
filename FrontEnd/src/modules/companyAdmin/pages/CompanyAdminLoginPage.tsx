@@ -41,13 +41,14 @@ export const CompanyAdminLoginPage = () => {
                   <input
                     className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-3 outline-none focus:border-indigo-600"
                     type="email"
+                    placeholder="Enter your email here"
                     autoComplete="email"
                     {...register("email")}
                   />
                 </span>
                 {errors.email && <span className="mt-1 block text-xs text-rose-600">{errors.email.message}</span>}
               </label>
-
+                
               <label className="block text-sm font-semibold">
                 Password
                 <span className="relative mt-2 block">
@@ -55,6 +56,7 @@ export const CompanyAdminLoginPage = () => {
                   <input
                     className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-12 outline-none focus:border-indigo-600"
                     type={showPassword ? "text" : "password"}
+                    placeholder="Enter you password here"
                     autoComplete="current-password"
                     {...register("password")}
                   />

@@ -1,8 +1,8 @@
-import { ActorType } from "../types";
+import { ActorType } from "../../types";
 
-import { ICompanyAdmin } from "../../modules/companyAdmin/model/model";
-import { IAccountant } from "../../modules/companyAccountant/model/accountantModel";
-import { IAdmin } from "../../modules/admin/model/admin.model.interface";
+import { ICompanyAdmin } from "../../../modules/companyAdmin/model/model";
+import { IAccountant } from "../../../modules/companyAccountant/model/accountantModel";
+import { IAdmin } from "../../../modules/admin/model/admin.model.interface";
 
 
 

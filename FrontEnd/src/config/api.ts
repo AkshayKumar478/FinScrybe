@@ -1,4 +1,6 @@
 
+import { useAuthStore } from "../common/stores/authStore";
+
 export class ApiError extends Error {
   public readonly status: number;
   public readonly details?: unknown;
@@ -13,7 +15,7 @@ export class ApiError extends Error {
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") ??
-  "http://localhost:5000/api";
+  "http://localhost:5000";
 
 export type RequestOptions = {
   method?: "GET" | "POST" | "PATCH";
@@ -21,13 +23,16 @@ export type RequestOptions = {
   token?: string | null;
 };
 
-const clearAuthenticationOnUnauthorized = async (): Promise<void> => {
-  const { useAuthStore } = await import("../common/stores/authStore");
+const clearAuthenticationOnUnauthorized = (path: string): void => {
   const auth = useAuthStore.getState();
 
-  auth.logoutClient();
-  auth.logoutSuperAdmin();
-  auth.logoutCompanyAdmin();
+  if (path.startsWith("/admin") || path.startsWith("/companies")) {
+    auth.logoutSuperAdmin();
+  } else if (path.startsWith("/company-admin")) {
+    auth.logoutCompanyAdmin();
+  } else {
+    auth.logoutClient();
+  }
 };
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -49,7 +54,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 
   if (!response.ok) {
     if (response.status === 401) {
-      await clearAuthenticationOnUnauthorized();
+      await clearAuthenticationOnUnauthorized(path);
     }
 
     throw new ApiError(

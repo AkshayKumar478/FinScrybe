@@ -6,7 +6,7 @@ import { verifyAccessToken } from "../utils/jwt";
 import {JwtMessage} from '../constants/messages'
 
 
-import { authenticatedActorService, AuthenticatedActorService } from "../services/authenticatedActor.service";
+import { authenticatedActorService, AuthenticatedActorService } from "../services/actorServices/authenticatedActor.service";
 
 
  export const authMiddleware = async (

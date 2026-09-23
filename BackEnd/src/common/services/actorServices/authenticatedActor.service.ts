@@ -1,9 +1,9 @@
-import { ActorType } from "../types";
-import { adminRepository } from "../../modules/admin/repositories/admin.repository";
-import {IAdminRepository} from '../../modules/admin/repositories/admin.repository.interface'
-import { companyAdminRepository } from "../../modules/companyAdmin/repositories/companyAdmin.repository";
-import { ICompanyAdminRepository } from "../../modules/companyAdmin/repositories/companyAdmin.repository.interface";
-import { accountantRepository, type IAccountantRepository } from "../../modules/companyAccountant/repositories/accountant.repository";
+import { ActorType } from "../../types";
+import { adminRepository } from "../../../modules/admin/repositories/admin.repository";
+import {IAdminRepository} from '../../../modules/admin/repositories/admin.repository.interface'
+import { companyAdminRepository } from "../../../modules/companyAdmin/repositories/companyAdmin.repository";
+import { ICompanyAdminRepository } from "../../../modules/companyAdmin/repositories/companyAdmin.repository.interface";
+import { accountantRepository, type IAccountantRepository } from "../../../modules/companyAccountant/repositories/accountant.repository";
 import {IAuthenticatedActorService,AuthActor }from './authenticatedActor.service.interface'
 export class AuthenticatedActorService
   implements IAuthenticatedActorService

@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 
 
-app.use("/api", apiRoutes);
+app.use("/", apiRoutes);
 app.use(errorMiddleware);
 
 export default app;
