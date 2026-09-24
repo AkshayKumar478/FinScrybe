@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
 import { UnauthorizedError } from "../../../common/errors/UnauthorizedError";
-import { companyService, ICompanyService } from "../services/company.service";
+import {ICompanyService} from '../services/company.service.interface'
+import { companyService } from "../services/company.service";
 import {HttpStatus } from '../../../common/constants/httpstatus'
 import {ICompanyController} from './company.controller.interface' 
 import { JwtMessage} from '../../../common/constants/messages'

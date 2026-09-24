@@ -1,3 +1,4 @@
+import type { ObjectIdToString } from "mongoose";
 import { CompanyStatus } from "../../../common/types";
 
 

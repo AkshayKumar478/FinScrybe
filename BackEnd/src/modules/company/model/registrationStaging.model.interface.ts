@@ -14,7 +14,7 @@ export interface ICompanyRegistrationStaging extends Document {
   adminPassword: string;
   adminPhoneNumber: string;
 
-  otpHash: Promise<string>;
+  otpHash: string;
   otpExpiresAt: Date;
   otpAttempts: number;
   emailVerified: boolean;

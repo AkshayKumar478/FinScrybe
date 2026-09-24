@@ -3,8 +3,8 @@ import { ForbiddenError } from "../../../common/errors/ForbiddenError";
 import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { companyRepository,} from "../repositories/company.repository";
 import { ICompanyRepository} from "../repositories/company,repository.interface";
-import { mapCompanies, mapCompany,mapCompanyRegistrationResponse } from "../mappers/company.mapper";
-import { CompanyDto, CompanyRegistrationResponse } from "../mappers/company.mapper.interface";
+import { mapCompanies, mapCompany,mapCompanyRegistrationResponse, mapRegistrationStartResponse,mapStagingToRegistrationPayload } from "../mappers/company.mapper";
+import { CompanyDto, CompanyRegistrationResponse} from "../mappers/company.mapper.interface";
 import { ICompany } from "../model/model.interface";
 import { ICompanyAdmin } from "../../companyAdmin/model/model";
 import { ICompanyRegistrationPayload, ICompanyRegistrationResult } from "../contracts";
@@ -14,7 +14,7 @@ import mongoose from "mongoose";
 import { authenticatedActorService } from "../../../common/services/actorServices/authenticatedActor.service";
 import { CompanyRegistrationInput } from  "../validators/company.validation";
 import { ConflictError } from "../../../common/errors/ConflictError";
-import {CompanyAdminMessage, CompanyRegistrationMessage ,AccountantMessage, GeneralMessage} from '../../../common/constants/messages'
+import {CompanyAdminMessage, CompanyRegistrationMessage ,AccountantMessage, GeneralMessage,OtpVerificationMessage,EmailVerification} from '../../../common/constants/messages'
 import {ICompanyService} from './company.service.interface'
 import { hashValue } from "../../../common/utils/bcrypt";
 import {IOtpService} from '../../../common/services/OTPService/otp.service.interface'
@@ -23,6 +23,7 @@ import {otpService} from '../../../common/services/OTPService/otp.service'
 import {emailService} from '../../../common/services/emailService/email.service'
 import {IRegistrationRepository } from '../repositories/registrationStaging.repository.interface'
 import {registrationStagingRepository} from '../repositories/registrationStaging.repository'
+import {HttpStatus} from '../../../common/constants/httpstatus'
 import { OtpValues} from "../../../common/constants/constants"
 class CompanyService implements ICompanyService {
   constructor(private readonly repository: ICompanyRepository,
@@ -108,9 +109,11 @@ class CompanyService implements ICompanyService {
   async startRegistration(
     payload:CompanyRegistrationInput
   ){
+    await this.assertCompanyRegistrationAvailability(payload);
+
    const hashedPassword=await hashValue(payload.adminPassword)
-     const otp=otpService.generate()
-     const hashedOtp=hashValue(otp)
+     const otp=this.otpService.generate()
+     const hashedOtp= await hashValue(otp)
       const now=new Date()
     const otpExpiresAt=new Date(
       now.getTime()+OtpValues.expiresInMinutes*60*1000
@@ -120,7 +123,7 @@ class CompanyService implements ICompanyService {
       now.getTime()+60*60*1000
     )
 
-    const staging=registrationStagingRepository.create({
+    const staging= await this.registrationStaging.create({
      companyName: payload.companyName,
         industry: payload.industry,
         companyEmail: payload.companyEmail,
@@ -167,12 +170,64 @@ class CompanyService implements ICompanyService {
           </p>
         </div>
       `)
-      return {
-        registrationId:(await staging)._id,
-        message:CompanyRegistrationMessage.REGISTRATION_Started_message
-      }
+      return mapRegistrationStartResponse(staging._id.toString(),CompanyRegistrationMessage.REGISTRATION_Started_message)
 
   }
+  async verifyRegistrationOtp(email:string,otp:string){
+    const staging=await this.registrationStaging.findByAdminEmail(email)
+    if(!staging){
+      throw new NotFoundError(CompanyRegistrationMessage.REGISTRATION_NOT_FOUND)
+    }
+    if(!staging.emailVerified){
+       throw new ConflictError(EmailVerification.VERIFY_EMAIL_MESSAGE)
+    }
+
+    if(staging.otpAttempts>=OtpValues.maxAttempts){
+      throw new ForbiddenError(OtpVerificationMessage.ATTEMPTS_EXCEEDED)
+    }
+    if(staging.otpExpiresAt.getTime()< Date.now()){
+      throw new ForbiddenError(OtpVerificationMessage.OTP_EXPIRED)
+    }
+
+    const verifiedOtp= await this.otpService.verify(otp, staging.otpHash)
+
+    if(!verifiedOtp){
+      await this.registrationStaging.updateById(staging._id.toString(),{
+        $inc:{
+          otpAttempts:1
+        }
+      })
+     throw new ForbiddenError(OtpVerificationMessage.INVALID_OTP)
+    }
+
+    await this.registrationStaging.updateById(staging._id.toString(),{
+      $set:{
+        emailVerified:true
+      }
+    })
+
+    return {
+      message:EmailVerification.EMAIL_VERIFIED_MESSAGE
+    }
+
+  } 
+   async completeRegistration(registrationId:string){
+
+     const staging=await this.registrationStaging.findById(registrationId)
+     if(!staging){
+      throw new NotFoundError(CompanyRegistrationMessage.REGISTRATION_NOT_FOUND)
+    }
+
+    if(!staging.emailVerified){
+      throw new ForbiddenError(EmailVerification.VERIFY_EMAIL_MESSAGE)
+    }
+     const companyRegistrationPayload=mapStagingToRegistrationPayload(staging)
+     const {companyAdmin,company}=await this.createCompanyRegistration(companyRegistrationPayload)  
+
+        this.registrationStaging.deleteById(staging._id.toString())
+        return mapCompanyRegistrationResponse(company,companyAdmin)
+     
+    }
 
   async listAll(): Promise<CompanyDto[]> {
     const companies = await this.repository.findMany();
@@ -271,7 +326,7 @@ const isDuplicateKeyError = (
 ): error is mongoose.mongo.MongoServerError => {
   return (
     error instanceof mongoose.mongo.MongoServerError &&
-    error.code === 11000
+    error.code === HttpStatus.MONGOOSE_DUPLICATE_KEY_ERROR
   );
 };
 

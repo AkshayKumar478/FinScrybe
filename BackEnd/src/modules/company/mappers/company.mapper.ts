@@ -1,9 +1,10 @@
 import { ICompany } from "../model/model.interface";
-import { CompanyStatus } from "../../../common/types";
 import { ICompanySummary } from "../contracts";
 import { IActiveActor } from "../../../common/contracts/actorContracts";
 import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse,RegistrationStartResponse} from './company.mapper.interface'
 import {CompanyRegistrationMessage} from '../../../common/constants/messages'
+import {ICompanyRegistrationStaging} from '../model/registrationStaging.model.interface'
+import  {ICompanyRegistrationPayload} from '../contracts'
 
 
 export function mapCompany(company: ICompany): CompanyDto {
@@ -43,6 +44,7 @@ export function mapRegistrationStartResponse(
     message,
   };
 }
+
 export function mapCompanyRegistrationResponse(
   company: ICompanySummary,
   companyAdmin: IActiveActor
@@ -55,6 +57,27 @@ export function mapCompanyRegistrationResponse(
       fullName: companyAdmin.fullName,
       email: companyAdmin.email,
       phoneNumber: companyAdmin.phoneNumber,
+    },
+  };
+}
+
+export function mapStagingToRegistrationPayload(
+  staging: ICompanyRegistrationStaging
+): ICompanyRegistrationPayload {
+  return {
+    company: {
+      companyName: staging.companyName,
+      industry: staging.industry,
+      companyEmail: staging.companyEmail,
+      companyPhone: staging.companyPhone,
+      gstin: staging.gstin,
+    },
+
+    companyAdmin: {
+      fullName: staging.adminFullName,
+      email: staging.adminEmail,
+      password: staging.adminPassword,
+      phoneNumber: staging.adminPhoneNumber,
     },
   };
 }

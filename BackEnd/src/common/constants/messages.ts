@@ -6,6 +6,8 @@ export enum CompanyRegistrationMessage {
   REGISTRATION_SUCCESS = "Company registered successfully",
   REGISTRATION_SUBMITTED_SUCCESS = "Company registration submitted successfully",
   REGISTRATION_FAILED = "Company registration failed",
+  REGISTRATION_NOT_FOUND = "Registration not found or registration has expired.",
+  REGISTRATION_EMAIL_ALREADY_VERIFIED = "Registration email has already been verified.",
 
   COMPANY_REGISTRATION_TRANSACTION_INCOMPLETE = "Company registration transaction did not complete",
 
@@ -39,7 +41,19 @@ export enum CompanyValidation {
 
 }
 
+//Otp verification messages
+export enum OtpVerificationMessage{
+ ATTEMPTS_EXCEEDED="Maximum OTP verification attempts exceeded.",
+ OTP_EXPIRED="OTP has expired. Please request a new OTP.",
+ INVALID_OTP="Invalid OTP.",
+}
 
+export enum EmailVerification{
+   EMAIL_VERIFIED_MESSAGE="Email verified successfully. You can now complete your registration.",
+   VERIFY_EMAIL_MESSAGE="Please verify your email before completing registration."
+
+
+}
 
 
 // SUPER ADMIN MESSAGES
