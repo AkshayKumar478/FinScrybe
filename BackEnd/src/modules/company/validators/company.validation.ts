@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CompanyStatus } from "../../../common/types";
-import {ValidationMessage,CompanyAdminMessage,CompanyValidation, CompanyRegistrationMessage} from '../../../common/constants/messages'
+import {ValidationMessage,CompanyAdminMessage,CompanyValidation, CompanyRegistrationMessage,OtpVerificationMessage,} from '../../../common/constants/messages'
 
 export const companyRegistrationSchema = z.object({
   companyName: z.string().trim().min(1, CompanyValidation.COMPANY_NAME_REQUIRED),
@@ -35,12 +35,35 @@ export const companyRegistrationSchema = z.object({
     .trim()
     .min(1, CompanyAdminMessage.COMPANY_ADMIN_FULL_NAME),
 });
+export const verifyRegistrationOtpSchema = z.object({
+  email: z
+    .string()
+    .email(CompanyAdminMessage.VALID_EMAIL_REQUIRED)
+    .trim()
+    .toLowerCase(),
 
+  otp: z
+    .string()
+    .length(6, OtpVerificationMessage.OTP_MUST_BE_SIX_DIGITS)
+    .regex(/^\d{6}$/, OtpVerificationMessage.INVALID_OTP),
+});
 export const companyIdParamsSchema = z.object({
   companyId: z.string().min(1,CompanyRegistrationMessage.COMPANY_ID_REQUIRED),
+});
+export const completeRegistrationSchema = z.object({
+  verificationToken: z
+    .string()
+    .min(1, "Registration verification token is required"),
 });
 
 export const updateCompanyStatusSchema = z.object({
   status: z.nativeEnum(CompanyStatus),
 });
+export type CompleteRegistrationInput = z.infer<
+  typeof completeRegistrationSchema
+>;
+export type VerifyRegistrationOtpInput = z.infer<
+  typeof verifyRegistrationOtpSchema
+>;
+
 export type CompanyRegistrationInput = z.infer<typeof companyRegistrationSchema>;

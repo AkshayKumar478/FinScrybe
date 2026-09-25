@@ -3,20 +3,30 @@ import { authMiddleware } from "../../../common/middlewares/auth.middleware";
 import { roleMiddleware } from "../../../common/middlewares/role.middleware";
 import { validateMiddleware } from "../../../common/middlewares/validate.middleware";
 import { ActorType } from "../../../common/types";
-import { companyRegistrationSchema } from "../validators/company.validation";
+import { companyRegistrationSchema,verifyRegistrationOtpSchema,completeRegistrationSchema } from "../validators/company.validation";
 import { companyController } from "../controllers/company.controller";
+
 import {
   companyIdParamsSchema,
   updateCompanyStatusSchema,
 } from "../validators/company.validation";
+import { companyAdminController } from "../../companyAdmin/controllers/companyAdmin.controller";
 
 const companyRouter = Router();
-companyRouter.post(
-  "/register",
-  validateMiddleware({ body: companyRegistrationSchema }),
-  companyController.registerCompany.bind(companyController)
-);
+ companyRouter.post("/registration/start",
+  validateMiddleware({body:companyRegistrationSchema}),
 
+  companyController.startRegistration.bind(companyController)
+ )
+
+ companyRouter.post('/registration/verify-otp',
+  validateMiddleware({body:verifyRegistrationOtpSchema}),
+  companyController.verifyRegistrationOtp.bind(companyController)
+)
+ companyRouter.post('/registration/complete',
+  validateMiddleware({body:completeRegistrationSchema}),
+  companyController.completeRegistration.bind(companyController)
+)
 
 companyRouter.get(
   "/",

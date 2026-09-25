@@ -37,6 +37,7 @@ export interface CompanyRegistrationResponse {
 }
 export interface RegistrationOtpVerificationResponse {
   message: string;
+  verificationToken: string;
 }
 export interface RegistrationStartResponse {
   registrationId: string;

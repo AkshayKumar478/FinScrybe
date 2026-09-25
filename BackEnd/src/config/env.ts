@@ -13,6 +13,7 @@ const envSchema = z.object({
     PORT: z.coerce.number(),
 
     MONGODB_URI: z.string(),
+
     JWT_ACCESS_SECRET: z.string(),
 
     JWT_ACCESS_EXPIRES_IN: z.string(),
@@ -32,6 +33,9 @@ const envSchema = z.object({
     SMTP_PASSWORD: z.string(),
 
     CLIENT_URL: z.string().url(),
+    REGISTRATION_VERIFICATION_TOKEN_SECRET:z.string(),
+
+    REGISTRATION_VERIFICATION_TOKEN_EXPIRES_IN: z.string(),
     
 });
 

@@ -8,7 +8,7 @@ import { CompanyRegistrationInput } from  "../validators/company.validation";
 export interface ICompanyService {
   startRegistration(payload:CompanyRegistrationInput):Promise<RegistrationStartResponse>
   verifyRegistrationOtp(email:string,otp:string):Promise<RegistrationOtpVerificationResponse>
-  completeRegistration(registrationId:string):Promise<CompanyRegistrationResponse>
+  completeRegistration(verificationToken:string):Promise<CompanyRegistrationResponse>
 
 
   listAll(): Promise<CompanyDto[]>;

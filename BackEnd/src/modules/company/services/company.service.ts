@@ -25,6 +25,7 @@ import {IRegistrationRepository } from '../repositories/registrationStaging.repo
 import {registrationStagingRepository} from '../repositories/registrationStaging.repository'
 import {HttpStatus} from '../../../common/constants/httpstatus'
 import { OtpValues} from "../../../common/constants/constants"
+import { generateRegistrationVerificationToken, verifyRegistrationVerificationToken}from '../../../common/utils/jwt'
 class CompanyService implements ICompanyService {
   constructor(private readonly repository: ICompanyRepository,
     private readonly companyAdminRepo: ICompanyAdminRepository,
@@ -170,7 +171,7 @@ class CompanyService implements ICompanyService {
           </p>
         </div>
       `)
-      return mapRegistrationStartResponse(staging._id.toString(),CompanyRegistrationMessage.REGISTRATION_Started_message)
+      return mapRegistrationStartResponse(staging._id.toString(),CompanyRegistrationMessage.REGISTRATION_STARTED_MESSAGE)
 
   }
   async verifyRegistrationOtp(email:string,otp:string){
@@ -178,8 +179,8 @@ class CompanyService implements ICompanyService {
     if(!staging){
       throw new NotFoundError(CompanyRegistrationMessage.REGISTRATION_NOT_FOUND)
     }
-    if(!staging.emailVerified){
-       throw new ConflictError(EmailVerification.VERIFY_EMAIL_MESSAGE)
+    if(staging.emailVerified){
+       throw new ConflictError(EmailVerification.EMAIL_AlREADY_VERIFIED_MESSAGE)
     }
 
     if(staging.otpAttempts>=OtpValues.maxAttempts){
@@ -205,15 +206,20 @@ class CompanyService implements ICompanyService {
         emailVerified:true
       }
     })
-
+    
+     const verificationToken=generateRegistrationVerificationToken(staging._id.toString())
     return {
-      message:EmailVerification.EMAIL_VERIFIED_MESSAGE
+      message:EmailVerification.EMAIL_VERIFIED_MESSAGE,
+      verificationToken
     }
 
   } 
-   async completeRegistration(registrationId:string){
 
-     const staging=await this.registrationStaging.findById(registrationId)
+
+   async completeRegistration(verificationToken:string){
+    const payload=verifyRegistrationVerificationToken(verificationToken)
+
+     const staging=await this.registrationStaging.findById(payload.registrationId)
      if(!staging){
       throw new NotFoundError(CompanyRegistrationMessage.REGISTRATION_NOT_FOUND)
     }
@@ -224,7 +230,7 @@ class CompanyService implements ICompanyService {
      const companyRegistrationPayload=mapStagingToRegistrationPayload(staging)
      const {companyAdmin,company}=await this.createCompanyRegistration(companyRegistrationPayload)  
 
-        this.registrationStaging.deleteById(staging._id.toString())
+        await this.registrationStaging.deleteById(staging._id.toString())
         return mapCompanyRegistrationResponse(company,companyAdmin)
      
     }

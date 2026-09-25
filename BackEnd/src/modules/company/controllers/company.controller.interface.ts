@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
 export interface ICompanyController {
-  registerCompany(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
+  startRegistration(req: Request, res: Response, next: NextFunction): Promise<void>;
+  verifyRegistrationOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
+  completeRegistration(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+
   listAll(req: Request, res: Response, next: NextFunction): Promise<void>;
   listPending(
     req: Request,

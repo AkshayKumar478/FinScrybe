@@ -23,7 +23,9 @@ export enum CompanyRegistrationMessage {
   PENDING_APPROVAL = "Company registration is pending approval",
   APPROVED = "Company registration approved successfully",
   REJECTED = "Company registration rejected",
-  REGISTRATION_Started_message="Registration started. Please verify your email using the OTP sent to your email address."
+  REGISTRATION_STARTED_MESSAGE="Registration started. Please verify your email using the OTP sent to your email address.",
+  REGISTRATION_TOKEN_iNVALID="Invalid registration verification token",
+
 }
 
 export enum CompanyValidation {
@@ -46,11 +48,13 @@ export enum OtpVerificationMessage{
  ATTEMPTS_EXCEEDED="Maximum OTP verification attempts exceeded.",
  OTP_EXPIRED="OTP has expired. Please request a new OTP.",
  INVALID_OTP="Invalid OTP.",
+ OTP_MUST_BE_SIX_DIGITS=""
 }
 
 export enum EmailVerification{
    EMAIL_VERIFIED_MESSAGE="Email verified successfully. You can now complete your registration.",
-   VERIFY_EMAIL_MESSAGE="Please verify your email before completing registration."
+   VERIFY_EMAIL_MESSAGE="Please verify your email before completing registration.",
+   EMAIL_AlREADY_VERIFIED_MESSAGE="Email has already been verified."
 
 
 }

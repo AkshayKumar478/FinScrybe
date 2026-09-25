@@ -5,12 +5,14 @@ import jwt, {
 } from "jsonwebtoken";
 import { env } from "../../config/env";
 import { ActorType } from "../types/index";
-
+import type {StringValue} from 'ms'
+import { UnauthorizedError } from "../errors/UnauthorizedError";
+import {CompanyRegistrationMessage} from '../constants/messages'
 export interface TokenPayload extends JwtPayload {
     id: string;
     actorType: ActorType;
 }
-interface RegistrationVerificationPayload {
+export interface RegistrationVerificationPayload {
   registrationId: string;
   purpose: "REGISTRATION_VERIFICATION";
 }
@@ -67,9 +69,19 @@ export const generateRegistrationVerificationToken = (
       registrationId,
       purpose: "REGISTRATION_VERIFICATION",
     },
-    env.JWT_ACCESS_SECRET,
+    env.REGISTRATION_VERIFICATION_TOKEN_SECRET,
     {
-      expiresIn: "10m",
+      expiresIn: env.REGISTRATION_VERIFICATION_TOKEN_EXPIRES_IN as StringValue
     }
-  );
-};
+  )
+
+}
+
+  export  const verifyRegistrationVerificationToken=(token:string)=>{
+      const payload=jwt.verify(token, env.REGISTRATION_VERIFICATION_TOKEN_SECRET  ) as RegistrationVerificationPayload
+      if(payload.purpose!=="REGISTRATION_VERIFICATION"){
+        throw new UnauthorizedError(CompanyRegistrationMessage.REGISTRATION_TOKEN_iNVALID)
+      }
+
+      return payload
+  }

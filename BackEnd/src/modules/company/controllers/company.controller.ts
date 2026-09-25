@@ -10,20 +10,40 @@ import { JwtMessage} from '../../../common/constants/messages'
 
 class CompanyController implements ICompanyController {
   constructor(private readonly service: ICompanyService) {}
+   
+ async startRegistration(req:Request,res:Response,next:NextFunction):Promise<void>{
+   try {
+      const response= await this.service.startRegistration(req.body)
+      
+       res.status(HttpStatus.CREATED).json(response)
+    
+   }catch(error){
+    next(error)
+   }
 
-   async registerCompany(
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> {
-      try {
-        const response = await this.service.registerCompany(req.body);
-        res.status(HttpStatus.CREATED).json(response);
-      } catch (error) {
-        next(error);
-      }
-    }
-  
+ }
+
+ async verifyRegistrationOtp(req:Request,res:Response,next:NextFunction):Promise<void>{
+   try{
+    const {email,otp}=req.body
+    const response= await this.service.verifyRegistrationOtp(email,otp)
+    res.status(HttpStatus.OK).json(response)
+   }catch(error){
+    next(error)
+   }
+
+ }
+
+ async completeRegistration (req:Request,res:Response,next:NextFunction):Promise<void>{
+         try{
+          const {verificationToken}=req.body
+          const response=await this.service.completeRegistration(verificationToken)
+          res.status(HttpStatus.CREATED).json(response)
+
+         }catch(error){
+          next(error)
+         }
+ }
 
   async listAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
