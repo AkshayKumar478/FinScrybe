@@ -48,7 +48,8 @@ export enum OtpVerificationMessage{
  ATTEMPTS_EXCEEDED="Maximum OTP verification attempts exceeded.",
  OTP_EXPIRED="OTP has expired. Please request a new OTP.",
  INVALID_OTP="Invalid OTP.",
- OTP_MUST_BE_SIX_DIGITS=""
+ OTP_MUST_BE_SIX_DIGITS="OTP must contain 6 digits",
+ OTP_RESENT_MESSAGE= "A new OTP has been sent to your email"
 }
 
 export enum EmailVerification{

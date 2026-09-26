@@ -4,7 +4,7 @@ import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { companyRepository,} from "../repositories/company.repository";
 import { ICompanyRepository} from "../repositories/company,repository.interface";
 import { mapCompanies, mapCompany,mapCompanyRegistrationResponse, mapRegistrationStartResponse,mapStagingToRegistrationPayload } from "../mappers/company.mapper";
-import { CompanyDto, CompanyRegistrationResponse} from "../mappers/company.mapper.interface";
+import { CompanyDto,RegistrationOtpResendResponse} from "../mappers/company.mapper.interface";
 import { ICompany } from "../model/model.interface";
 import { ICompanyAdmin } from "../../companyAdmin/model/model";
 import { ICompanyRegistrationPayload, ICompanyRegistrationResult } from "../contracts";
@@ -26,6 +26,7 @@ import {registrationStagingRepository} from '../repositories/registrationStaging
 import {HttpStatus} from '../../../common/constants/httpstatus'
 import { OtpValues} from "../../../common/constants/constants"
 import { generateRegistrationVerificationToken, verifyRegistrationVerificationToken}from '../../../common/utils/jwt'
+import { stat } from "fs";
 class CompanyService implements ICompanyService {
   constructor(private readonly repository: ICompanyRepository,
     private readonly companyAdminRepo: ICompanyAdminRepository,
@@ -174,6 +175,43 @@ class CompanyService implements ICompanyService {
       return mapRegistrationStartResponse(staging._id.toString(),CompanyRegistrationMessage.REGISTRATION_STARTED_MESSAGE)
 
   }
+
+  async resendOtp(email:string):Promise<RegistrationOtpResendResponse>{
+     const staging=await this.registrationStaging.findByAdminEmail(email)
+     if(!staging){
+       throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND)
+
+     }
+
+     if(staging.emailVerified){
+      throw new ConflictError(EmailVerification.EMAIL_AlREADY_VERIFIED_MESSAGE)
+     }
+     const otp= await this.otpService.generate()
+     const hashedOtp= await hashValue(otp)
+     const now=new Date()
+     const otpExpiresAt=new Date(now.getTime()+OtpValues.expiresInMinutes*60*1000)
+     
+     await this.registrationStaging.updateById(staging._id.toString(),{
+      $set:{
+        otpHash:hashedOtp,
+        otpExpiresAt,
+        otpAttempts:0
+      }
+     })
+
+     await this.emailService.sendEmail(staging.adminEmail,"Your new FinScrybe verification OTP", `
+      <div>
+        <h2>FinScrybe Email Verification</h2>
+        <p>Your new OTP is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP will expire in ${OtpValues.expiresInMinutes} minutes.</p>
+      </div>
+    `)
+   return {
+     message:OtpVerificationMessage.OTP_RESENT_MESSAGE
+   }
+  }
+
   async verifyRegistrationOtp(email:string,otp:string){
     const staging=await this.registrationStaging.findByAdminEmail(email)
     if(!staging){

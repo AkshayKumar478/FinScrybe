@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 export interface ICompanyController {
   startRegistration(req: Request, res: Response, next: NextFunction): Promise<void>;
+   resendRegistrationOtp(req:Request,res:Response,next:NextFunction):Promise<void>;
   verifyRegistrationOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
   completeRegistration(req: Request, res: Response, next: NextFunction): Promise<void>;
 

@@ -17,6 +17,7 @@ export interface RegistrationVerificationPayload {
   purpose: "REGISTRATION_VERIFICATION";
 }
 
+
 export const generateAccessToken = (
     payload: TokenPayload
 ): string => {

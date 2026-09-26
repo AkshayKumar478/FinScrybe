@@ -1,4 +1,3 @@
-import type { ObjectIdToString } from "mongoose";
 import { CompanyStatus } from "../../../common/types";
 
 
@@ -15,6 +14,10 @@ export interface CompanyDto {
   approvedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface RegistrationOtpResendResponse {
+  message: string;
 }
 
 export interface AuthCompanyResponse {

@@ -22,6 +22,16 @@ class CompanyController implements ICompanyController {
    }
 
  }
+  async resendRegistrationOtp(req:Request,res:Response,next:NextFunction):Promise<void>{
+      try{
+        const {email}=req.body
+        const response= await this.service.resendOtp(email)
+        res.status(HttpStatus.OK).json(response)
+
+      }catch(error){
+        next(error)
+      } 
+  }
 
  async verifyRegistrationOtp(req:Request,res:Response,next:NextFunction):Promise<void>{
    try{

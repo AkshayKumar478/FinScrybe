@@ -47,6 +47,14 @@ export const verifyRegistrationOtpSchema = z.object({
     .length(6, OtpVerificationMessage.OTP_MUST_BE_SIX_DIGITS)
     .regex(/^\d{6}$/, OtpVerificationMessage.INVALID_OTP),
 });
+export const resendRegistrationOtpSchema = z.object({
+  email: z
+    .string()
+    .email(CompanyAdminMessage.VALID_EMAIL_REQUIRED)
+    .trim()
+    .toLowerCase(),
+});
+
 export const companyIdParamsSchema = z.object({
   companyId: z.string().min(1,CompanyRegistrationMessage.COMPANY_ID_REQUIRED),
 });
@@ -65,5 +73,6 @@ export type CompleteRegistrationInput = z.infer<
 export type VerifyRegistrationOtpInput = z.infer<
   typeof verifyRegistrationOtpSchema
 >;
+export type ResendRegistrationOtp=z.infer<typeof resendRegistrationOtpSchema>
 
 export type CompanyRegistrationInput = z.infer<typeof companyRegistrationSchema>;
