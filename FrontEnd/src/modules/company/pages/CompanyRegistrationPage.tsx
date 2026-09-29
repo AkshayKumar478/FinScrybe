@@ -3,17 +3,29 @@ import { useCompanyRegistration } from "../hooks/useCompanyRegistration";
 import { CompanyDetailsStep } from "../components/CompanyDetailsStep";
 import { PrimaryAdminDetailsStep } from "../components/PrimaryAdminDetailsStep";
 import { RegistrationStepIndicator } from "../components/RegistrationStepIndicator";
+import { OtpVerificationStep } from "../../../common/components/OtpVerificationStep";
 
 export const CompanyRegistrationPage = () => {
   const {
     form,
     currentStep,
+    registrationStage,
+    adminEmail,
+    verificationToken,
+    canRetryCompletion,
     isSubmitting,
+    isVerifying,
+    isResending,
+    isCompleting,
     error,
     success,
+    resendMessage,
     handleNextStep,
     handlePrevStep,
     onSubmit,
+    handleVerifyOtp,
+    handleResendOtp,
+    handleRetryRegistration,
   } = useCompanyRegistration();
 
   if (success) {
@@ -24,15 +36,48 @@ export const CompanyRegistrationPage = () => {
             <h2 className="text-2xl font-bold text-green-600 mb-4">
               Registration Successful!
             </h2>
+
             <p className="text-gray-600 mb-6">
-              Your company has been registered successfully. Please login to continue.
+              Your company has been registered successfully. Please login to
+              continue.
             </p>
+
             <Link
               to="/login"
               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Go to Login
             </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (registrationStage === "otp") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            {verificationToken ? "Complete registration" : "Verify your email"}
+          </h2>
+        </div>
+
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <OtpVerificationStep
+              adminEmail={adminEmail}
+              onVerify={handleVerifyOtp}
+              onResend={handleResendOtp}
+              isVerifying={isVerifying}
+              isResending={isResending}
+              isCompleting={isCompleting}
+              verificationToken={verificationToken}
+              canRetryRegistration={canRetryCompletion || Boolean(verificationToken && !success)}
+              onRetryRegistration={handleRetryRegistration}
+              error={error}
+              successMessage={resendMessage}
+            />
           </div>
         </div>
       </div>
@@ -59,7 +104,10 @@ export const CompanyRegistrationPage = () => {
 
           <form onSubmit={onSubmit} className="space-y-6">
             {currentStep === 1 && <CompanyDetailsStep form={form} />}
-            {currentStep === 2 && <PrimaryAdminDetailsStep form={form} />}
+
+            {currentStep === 2 && (
+              <PrimaryAdminDetailsStep form={form} />
+            )}
 
             <div className="flex justify-between mt-6">
               {currentStep === 2 ? (
@@ -89,7 +137,9 @@ export const CompanyRegistrationPage = () => {
                   disabled={isSubmitting}
                   className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400"
                 >
-                  {isSubmitting ? "Submitting..." : "Submit Registration"}
+                  {isSubmitting
+                    ? "Submitting..."
+                    : "Submit Registration"}
                 </button>
               )}
             </div>

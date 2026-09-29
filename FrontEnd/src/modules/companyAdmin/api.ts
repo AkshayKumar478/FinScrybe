@@ -1,5 +1,5 @@
 import { request } from "../../config/api";
-import type { CompanyAdminRole } from "../../common/constants/enums";
+import type { CompanyAdminRole } from "../../common/constants/ActorEnums";
 
 export interface CompanyAdminUser {
   id: string;

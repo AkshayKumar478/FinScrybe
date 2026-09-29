@@ -1,5 +1,5 @@
 import { request } from "../../config/api";
-import { CompanyStatus } from "../../common/constants/enums";
+import { CompanyStatus } from "../../common/constants/ActorEnums";
 
 export type SuperAdminAuthResponse = {
   message: string;

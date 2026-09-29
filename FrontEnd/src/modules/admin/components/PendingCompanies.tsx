@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
-import { CompanyStatus } from "../../../common/constants/enums";
+import { CompanyStatus } from "../../../common/constants/ActorEnums";
 import { adminApi, type CompanyRecord } from "../api";
 
 export function PendingCompanies() {
