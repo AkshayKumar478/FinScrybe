@@ -45,7 +45,7 @@ export function DashboardHeader({
               <div className="profile-dropdown-section">
                 <div className="dropdown-notice">
                   <Bell size={14} />
-                  <span>Live registration approvals are connected to backend APIs.</span>
+                  <span>Company registrations are available in the platform.</span>
                 </div>
               </div>
               <button type="button" className="dropdown-action">

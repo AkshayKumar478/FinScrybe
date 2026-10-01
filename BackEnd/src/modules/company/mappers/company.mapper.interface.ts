@@ -1,6 +1,3 @@
-import { CompanyStatus } from "../../../common/types";
-
-
 export interface CompanyDto {
   id: string;
   companyName: string;
@@ -9,9 +6,6 @@ export interface CompanyDto {
   companyPhone: string;
   gstin: string;
   companyAdminId?: string;
-  status: string;
-  approvedBy?: string;
-  approvedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,7 +19,6 @@ export interface AuthCompanyResponse {
   companyName: string;
   companyEmail: string;
   gstin: string;
-  status: CompanyStatus;
 }
 
 export interface CompanyRegistrationResponse {

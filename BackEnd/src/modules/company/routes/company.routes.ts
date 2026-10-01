@@ -3,14 +3,9 @@ import { authMiddleware } from "../../../common/middlewares/auth.middleware";
 import { roleMiddleware } from "../../../common/middlewares/role.middleware";
 import { validateMiddleware } from "../../../common/middlewares/validate.middleware";
 import { ActorType } from "../../../common/types";
-import { companyRegistrationSchema,verifyRegistrationOtpSchema,completeRegistrationSchema,resendRegistrationOtpSchema } from "../validators/company.validation";
+import { companyRegistrationSchema,verifyRegistrationOtpSchema,completeRegistrationSchema,resendRegistrationOtpSchema,companyIdParamsSchema } from "../validators/company.validation";
 import { companyController } from "../controllers/company.controller";
 
-import {
-  companyIdParamsSchema,
-  updateCompanyStatusSchema,
-} from "../validators/company.validation";
-import { companyAdminController } from "../../companyAdmin/controllers/companyAdmin.controller";
 
 const companyRouter = Router();
  companyRouter.post("/registration/start",
@@ -40,31 +35,11 @@ companyRouter.get(
 );
 
 companyRouter.get(
-  "/pending",
-  authMiddleware,
-  roleMiddleware(ActorType.ADMIN),
-  companyController.listPending.bind(companyController)
-);
-
-
-
-companyRouter.get(
   "/:companyId",
   authMiddleware,
   roleMiddleware(ActorType.ADMIN),
   validateMiddleware({ params: companyIdParamsSchema }),
   companyController.getById.bind(companyController)
-);
-
-companyRouter.patch(
-  "/:companyId/status",
-  authMiddleware,
-  roleMiddleware(ActorType.ADMIN),
-  validateMiddleware({
-    params: companyIdParamsSchema,
-    body: updateCompanyStatusSchema,
-  }),
-  companyController.updateStatus.bind(companyController)
 );
 
 export default companyRouter;

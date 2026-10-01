@@ -64,19 +64,6 @@ class CompanyController implements ICompanyController {
     }
   }
 
-  async listPending(
-    _req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const response = await this.service.listPending();
-      res.status(200).json(response);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async getCurrentCompany(
     req: Request,
     res: Response,
@@ -107,27 +94,6 @@ class CompanyController implements ICompanyController {
     }
   }
 
-  async updateStatus(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      if (!req.user?.id) {
-        throw new UnauthorizedError(JwtMessage.AUTHENTICATION_REQUIRED);
-      }
-
-      const response = await this.service.updateStatus(
-        req.params.companyId as string,
-        req.body.status,
-        req.user.id
-      );
-
-      res.status(HttpStatus.OK).json(response);
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 export const companyController = new CompanyController(companyService);

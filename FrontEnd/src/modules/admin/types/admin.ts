@@ -23,7 +23,6 @@ export interface CompanyRegistration {
   industry: string;
   companyEmail: string;
   registrationDate: string;
-  status: "Pending" | "Approved" | "Rejected" | "Reviewing";
 }
 
 export interface SubscriptionPlan {

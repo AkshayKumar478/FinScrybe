@@ -1,4 +1,4 @@
-import { ActorType, CompanyStatus } from "../../../common/types";
+import { ActorType,CompanyAdminRole } from "../../../common/types";
 import { ForbiddenError } from "../../../common/errors/ForbiddenError";
 import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { companyRepository,} from "../repositories/company.repository";
@@ -81,6 +81,7 @@ class CompanyService implements ICompanyService {
             password: payload.companyAdmin.password,
             phoneNumber: payload.companyAdmin.phoneNumber,
             isPrimaryAdmin: true,
+            role:CompanyAdminRole.ADMIN
           },
           { session }
         );
@@ -279,11 +280,6 @@ class CompanyService implements ICompanyService {
   }
   
 
-  async listPending(): Promise<CompanyDto[]> {
-    const companies = await this.repository.findByStatus(CompanyStatus.PENDING);
-    return mapCompanies(companies);
-  }
-
   async getById(companyId: string): Promise<CompanyDto> {
     const company = await this.repository.findById(companyId);
 
@@ -305,36 +301,6 @@ class CompanyService implements ICompanyService {
     }
 
     return mapCompany(company);
-  }
-
-  async updateStatus(
-    companyId: string,
-    status: CompanyStatus,
-    approvedBy: string
-  ): Promise<CompanyDto> {
-    const company = await this.repository.findById(companyId);
-
-    if (!company) {
-      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
-    }
-
-    const nextApprovedBy =
-      status === CompanyStatus.APPROVED ? approvedBy : undefined;
-    const nextApprovedAt =
-      status === CompanyStatus.APPROVED ? new Date() : undefined;
-
-    const updatedCompany = await this.repository.updateStatus(
-      companyId,
-      status,
-      nextApprovedBy,
-      nextApprovedAt
-    );
-
-    if (!updatedCompany) {
-      throw new NotFoundError(CompanyRegistrationMessage.COMPANY_NOT_FOUND);
-    }
-
-    return mapCompany(updatedCompany);
   }
 
   private async resolveCompanyForActor(

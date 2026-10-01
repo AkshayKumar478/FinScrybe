@@ -1,3 +1,3 @@
 export const notificationItems = [
-  "Live backend mode is enabled for registration approvals.",
+  "Company registration is available on the platform.",
 ];

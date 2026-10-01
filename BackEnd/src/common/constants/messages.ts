@@ -4,7 +4,6 @@
 
 export enum CompanyRegistrationMessage {
   REGISTRATION_SUCCESS = "Company registered successfully",
-  REGISTRATION_SUBMITTED_SUCCESS = "Company registration submitted successfully",
   REGISTRATION_FAILED = "Company registration failed",
   REGISTRATION_NOT_FOUND = "Registration not found or registration has expired.",
   REGISTRATION_EMAIL_ALREADY_VERIFIED = "Registration email has already been verified.",
@@ -20,9 +19,6 @@ export enum CompanyRegistrationMessage {
   COMPANY_OR_COMPANY_ADMIN_EXISTS= "Company or company admin already exists",
 
 
-  PENDING_APPROVAL = "Company registration is pending approval",
-  APPROVED = "Company registration approved successfully",
-  REJECTED = "Company registration rejected",
   REGISTRATION_STARTED_MESSAGE="Registration started. Please verify your email using the OTP sent to your email address.",
   REGISTRATION_TOKEN_iNVALID="Invalid registration verification token",
 
@@ -91,7 +87,6 @@ export enum CompanyAdminMessage {
   NOT_FOUND = "Company admin not found",
   COMPANY_ADMIN_EMAIL_ALREADY_REGISTERED = "Company  admin email already registered",
   COMPANY_ADMIN_NOT_LINKED = "Company admin is not linked to a company",
-  ACCOUNT_NOT_APPROVED = "Company admin account is not approved",
   ACCOUNT_INACTIVE = "Company admin account is inactive",
   
 

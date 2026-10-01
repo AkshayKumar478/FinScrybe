@@ -1,5 +1,4 @@
-import { Schema, model, models, Document, Types } from "mongoose";
-import { CompanyStatus } from '../../../common/types/index';
+import { Schema, model, models } from "mongoose";
 
 import {ICompany} from './model.interface'
 
@@ -46,21 +45,6 @@ const companySchema = new Schema<ICompany>(
       ref: "CompanyAdmin",
     },
 
-    status: {
-      type: String,
-      enum: Object.values(CompanyStatus),
-      default: CompanyStatus.PENDING,
-      index: true,
-    },
-
-    approvedBy: {
-      type: Schema.Types.ObjectId,
-      ref: "Admin",
-    },
-
-    approvedAt: {
-      type: Date,
-    },
   },
   {
     timestamps: true,

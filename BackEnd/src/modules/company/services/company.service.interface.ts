@@ -1,4 +1,4 @@
-import { ActorType, CompanyStatus } from "../../../common/types";
+import { ActorType } from "../../../common/types";
 
 import { CompanyDto, CompanyRegistrationResponse,RegistrationStartResponse ,RegistrationOtpVerificationResponse} from "../mappers/company.mapper.interface";
 import {RegistrationOtpResendResponse} from '../mappers/company.mapper.interface'
@@ -13,15 +13,9 @@ export interface ICompanyService {
 
 
   listAll(): Promise<CompanyDto[]>;
-  listPending(): Promise<CompanyDto[]>;
   getById(companyId: string): Promise<CompanyDto>;
   getCurrentUsersCompany(
     actorType: ActorType,
     actorId: string
-  ): Promise<CompanyDto>;
-  updateStatus(
-    companyId: string,
-    status: CompanyStatus,
-    approvedBy: string
   ): Promise<CompanyDto>;
 }

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { CompanyStatus } from "../../../common/types";
 import {ValidationMessage,CompanyAdminMessage,CompanyValidation, CompanyRegistrationMessage,OtpVerificationMessage,} from '../../../common/constants/messages'
 
 export const companyRegistrationSchema = z.object({
@@ -64,9 +63,6 @@ export const completeRegistrationSchema = z.object({
     .min(1, "Registration verification token is required"),
 });
 
-export const updateCompanyStatusSchema = z.object({
-  status: z.nativeEnum(CompanyStatus),
-});
 export type CompleteRegistrationInput = z.infer<
   typeof completeRegistrationSchema
 >;

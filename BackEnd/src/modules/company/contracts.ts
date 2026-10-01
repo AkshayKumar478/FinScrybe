@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import { CompanyStatus } from "../../common/types";
 import { IPasswordActor } from "../../common/contracts/actorContracts";
 import { IActiveActor } from "../../common/contracts/actorContracts";
 
@@ -12,7 +11,6 @@ export interface ICompanySummary {
   companyName: string;
   companyEmail: string;
   gstin: string;
-  status: CompanyStatus;
 }
 
 export interface ICompanyRegistrationPayload {

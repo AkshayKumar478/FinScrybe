@@ -1,12 +1,3 @@
-export const CompanyStatus = {
-  PENDING: "PENDING",
-  APPROVED: "APPROVED",
-  REJECTED: "REJECTED",
-  DEACTIVATED: "DEACTIVATED"
-} as const;
-
-export type CompanyStatus = (typeof CompanyStatus)[keyof typeof CompanyStatus];
-
 export const ActorType = {
   ADMIN: "ADMIN",
   COMPANY_ADMIN: "COMPANY_ADMIN",

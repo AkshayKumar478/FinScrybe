@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  UserCheck,
   Building2,
   CreditCard,
   BarChart3,
@@ -14,12 +13,10 @@ import {
 
 import adminAvatar from "../../../assets/admin_avatar.png";
 import { useAuthStore } from "../../../common/stores/authStore";
-import { PendingCompanies } from "../components/PendingCompanies";
 import { adminApi } from "../api";
 
 const tabLabels: Record<string, string> = {
   dashboard: "Dashboard",
-  registrations: "Registrations",
   companies: "Companies",
   subscriptions: "Subscriptions",
   reports: "Platform Reports",
@@ -67,7 +64,6 @@ export function SuperAdminDashboard() {
           <ul className="space-y-1">
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-              { id: "registrations", label: "Registrations", icon: UserCheck },
               { id: "companies", label: "Companies", icon: Building2 },
               { id: "subscriptions", label: "Subscriptions", icon: CreditCard },
               { id: "reports", label: "Platform Reports", icon: BarChart3 },
@@ -155,10 +151,7 @@ export function SuperAdminDashboard() {
 
         {/* Content body */}
         <div className="flex-1 p-8 overflow-y-auto">
-          {activeTab === "registrations" ? (
-            <PendingCompanies />
-          ) : (
-            <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full">
               <div className="bg-white border border-slate-200 rounded-3xl p-12 shadow-sm text-center max-w-md w-full">
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">
                   Welcome to {tabLabels[activeTab] || activeTab}
@@ -168,8 +161,7 @@ export function SuperAdminDashboard() {
                   {tabLabels[activeTab] || activeTab} view.
                 </p>
               </div>
-            </div>
-          )}
+          </div>
         </div>
       </main>
     </div>

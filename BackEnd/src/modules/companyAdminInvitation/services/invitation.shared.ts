@@ -5,7 +5,7 @@ import { ForbiddenError } from "../../../common/errors/ForbiddenError";
 import { NotFoundError } from "../../../common/errors/NotFoundError";
 import { AppError } from "../../../common/errors/AppError";
 import { env } from "../../../config/env";
-import { CompanyStatus, InvitationStatus } from "../../../common/types";
+import { InvitationStatus } from "../../../common/types";
 import { hashValue } from "../../../common/utils/bcrypt";
 import { sendEmail } from "../../../common/utils/email";
 import { generateToken } from "../../../common/utils/token";
@@ -90,16 +90,16 @@ interface InvitationInviterRepository {
   findById(id: string): Promise<InvitationInviter | null>;
 }
 
-interface ApprovedCompanyReader {
+interface CompanyReader {
   findById(
     id: string
-  ): Promise<{ status: CompanyStatus } | null>;
+  ): Promise<unknown | null>;
 }
 
 export class SharedInvitationService {
   constructor(
     private readonly inviterRepository: InvitationInviterRepository,
-    private readonly companyReader: ApprovedCompanyReader
+    private readonly companyReader: CompanyReader
   ) {}
 
   async createInvitation<
@@ -269,8 +269,8 @@ export class SharedInvitationService {
       inviter.companyId.toString()
     );
 
-    if (!company || company.status !== CompanyStatus.APPROVED) {
-      throw new ForbiddenError("Only approved companies can manage invitations");
+    if (!company) {
+      throw new NotFoundError("Company not found");
     }
 
     return inviter;

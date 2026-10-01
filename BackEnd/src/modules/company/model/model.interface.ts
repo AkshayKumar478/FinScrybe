@@ -1,5 +1,4 @@
 import {  Document, Types } from "mongoose";
-import { CompanyStatus } from '../../../common/types/index';
 
 
 export interface ICompany extends Document {
@@ -10,11 +9,6 @@ export interface ICompany extends Document {
   gstin: string;
 
   companyAdminId?: Types.ObjectId;
-
-  status: CompanyStatus;
-
-  approvedBy?: Types.ObjectId;
-  approvedAt?: Date;
 
   createdAt: Date;
   updatedAt: Date;

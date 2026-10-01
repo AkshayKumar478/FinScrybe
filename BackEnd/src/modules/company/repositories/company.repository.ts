@@ -2,7 +2,6 @@ import { QueryOptions, SaveOptions, Types } from "mongoose";
 
 import { BaseRepository} from "../../../common/base/base.repository";
 import { ICompanyRepository} from "./company,repository.interface";
-import { CompanyStatus } from "../../../common/types";
 import { Company} from "../model/model";
 import { ICompany} from "../model/model.interface";
 
@@ -31,10 +30,6 @@ export class CompanyRepository
     return this.findOne({ companyAdminId });
   }
 
-  async findByStatus(status: CompanyStatus): Promise<ICompany[]> {
-    return this.findMany({ status });
-  }
-
   async assignCompanyAdmin(
     companyId: string,
     companyAdminId: string | Types.ObjectId,
@@ -43,18 +38,6 @@ export class CompanyRepository
     return this.updateById(companyId, { companyAdminId }, options);
   }
 
-  async updateStatus(
-    companyId: string,
-    status: CompanyStatus,
-    approvedBy?: string | Types.ObjectId,
-    approvedAt?: Date
-  ): Promise<ICompany | null> {
-    return this.updateById(companyId, {
-      status,
-      approvedBy,
-      approvedAt,
-    });
-  }
 }
 
 export const companyRepository = new CompanyRepository();

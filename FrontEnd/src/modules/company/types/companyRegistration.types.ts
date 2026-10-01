@@ -39,7 +39,6 @@ export interface CompleteRegistrationResponse {
     companyName: string;
     companyEmail: string;
     gstin: string;
-    status: string;
   };
   companyAdmin: {
     id: string;

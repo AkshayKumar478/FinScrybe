@@ -16,9 +16,6 @@ export function mapCompany(company: ICompany): CompanyDto {
     companyPhone: company.companyPhone,
     gstin: company.gstin,
     companyAdminId: company.companyAdminId?.toString(),
-    status: company.status,
-    approvedBy: company.approvedBy?.toString(),
-    approvedAt: company.approvedAt,
     createdAt: company.createdAt,
     updatedAt: company.updatedAt,
   };
@@ -31,7 +28,6 @@ export function mapCompanySummary(
     companyName: company.companyName,
     companyEmail: company.companyEmail,
     gstin: company.gstin,
-    status: company.status,
   };
 }
 
@@ -50,7 +46,7 @@ export function mapCompanyRegistrationResponse(
   companyAdmin: IActiveActor
 ): CompanyRegistrationResponse {
   return {
-    message: CompanyRegistrationMessage.REGISTRATION_SUBMITTED_SUCCESS ,
+    message: CompanyRegistrationMessage.REGISTRATION_SUCCESS,
     company: mapCompanySummary(company),
     companyAdmin: {
       id: companyAdmin._id.toString(),

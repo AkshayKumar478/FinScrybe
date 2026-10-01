@@ -14,74 +14,80 @@ export const CompanyDetailsStep = ({ form }: Props) => {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
           Company Name
         </label>
         <input
           {...register("companyName")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#635BFF] focus:ring-2 focus:ring-[#635BFF]/10 transition-colors"
           placeholder="Acme Corp"
         />
         {errors.companyName && (
-          <p className="mt-1 text-sm text-red-600">
+          <p className="mt-1 text-xs text-rose-600 font-medium">
             {errors.companyName.message}
           </p>
         )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
           Industry
         </label>
         <input
           {...register("industry")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#635BFF] focus:ring-2 focus:ring-[#635BFF]/10 transition-colors"
           placeholder="Technology"
         />
         {errors.industry && (
-          <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
+          <p className="mt-1 text-xs text-rose-600 font-medium">
+            {errors.industry.message}
+          </p>
         )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
           Company Email
         </label>
         <input
           type="email"
           {...register("companyEmail")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#635BFF] focus:ring-2 focus:ring-[#635BFF]/10 transition-colors"
           placeholder="contact@acme.com"
         />
         {errors.companyEmail && (
-          <p className="mt-1 text-sm text-red-600">
+          <p className="mt-1 text-xs text-rose-600 font-medium">
             {errors.companyEmail.message}
           </p>
         )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
           Company Phone
         </label>
         <input
           type="tel"
           {...register("companyPhone")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#635BFF] focus:ring-2 focus:ring-[#635BFF]/10 transition-colors"
           placeholder="1234567890"
         />
         {errors.companyPhone && (
-          <p className="mt-1 text-sm text-red-600">
+          <p className="mt-1 text-xs text-rose-600 font-medium">
             {errors.companyPhone.message}
           </p>
         )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">GSTIN</label>
+        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+          GSTIN
+        </label>
         <input
           {...register("gstin")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 uppercase"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 uppercase placeholder:text-slate-400 focus:outline-none focus:border-[#635BFF] focus:ring-2 focus:ring-[#635BFF]/10 transition-colors"
           placeholder="22AAAAA0000A1Z5"
         />
         {errors.gstin && (
-          <p className="mt-1 text-sm text-red-600">{errors.gstin.message}</p>
+          <p className="mt-1 text-xs text-rose-600 font-medium">
+            {errors.gstin.message}
+          </p>
         )}
       </div>
     </div>
