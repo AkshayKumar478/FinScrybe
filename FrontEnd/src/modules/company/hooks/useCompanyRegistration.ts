@@ -147,9 +147,7 @@ export const useCompanyRegistration = () => {
   };
 
   const handleVerifyOtp = async (otp: string) => {
-    // If a verification token is already preserved from a previous verification,
-    // do not call verifyRegistrationOtp again (backend will reject as email already verified).
-    // Instead, retry registration completion directly with the saved token.
+
     if (verificationToken) {
       await handleCompleteRegistration(verificationToken);
       return;

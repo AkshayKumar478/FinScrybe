@@ -26,15 +26,15 @@ export const CompanyAdminLoginPage = () => {
   return (
     <main className="min-h-screen flex flex-col lg:flex-row font-sans antialiased text-slate-900 bg-[#F8FAFC]">
       {/* LEFT COLUMN - Soft blue branding & decorative financial illustration */}
-      <section className="hidden lg:flex lg:w-1/2 bg-[#DDE9F9] flex-col justify-between p-10 xl:p-16 select-none relative overflow-hidden">
+      <section className="hidden lg:flex lg:w-1/2 bg-[#c2d7f3] flex-col justify-between p-10 xl:p-16 select-none relative overflow-hidden">
         <div>
           {/* Brand Wordmark */}
           <div className="text-3xl xl:text-4xl font-black tracking-tight">
             <span className="text-[#0B132B]">Fin</span>
-            <span className="text-[#635BFF]">Scrybe</span>
+            <span className="text-[#4d44ff]">Scrybe</span>
           </div>
           {/* Brand Tagline */}
-          <p className="mt-2 text-sm xl:text-base text-slate-500 font-normal">
+          <p className="mt-2 text-sm xl:text-base  text-black-900 font-normal">
             Intelligence-driven financial orchestration.
           </p>
         </div>

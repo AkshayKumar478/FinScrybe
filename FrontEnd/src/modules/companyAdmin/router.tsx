@@ -5,7 +5,14 @@ import { CompanyAdminDashboard } from "./pages/CompanyAdminDashboard";
 import { CompanyAdminLoginPage } from "./pages/CompanyAdminLoginPage";
 
 export const companyAdminRoutes: RouteObject[] = [
-  { path: "/login", element: <CompanyAdminLoginPage /> },
+  { path: "/login", 
+    element:(
+      
+     <AuthGuard type="companyAdmin" mode="guest" redirectTo="/company-admin/dashboard">
+       <CompanyAdminLoginPage />
+      </AuthGuard>
+    
+    )},
   {
     path: "/company-admin/dashboard",
     element: (
