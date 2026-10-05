@@ -23,10 +23,11 @@ import {otpService} from '../../../common/services/OTPService/otp.service'
 import {emailService} from '../../../common/services/emailService/email.service'
 import {IRegistrationRepository } from '../repositories/registrationStaging.repository.interface'
 import {registrationStagingRepository} from '../repositories/registrationStaging.repository'
-import {HttpStatus} from '../../../common/constants/httpstatus'
 import { OtpValues} from "../../../common/constants/constants"
 import { generateRegistrationVerificationToken, verifyRegistrationVerificationToken}from '../../../common/utils/jwt'
-import { stat } from "fs";
+import { getOtpExpiry } from "../../../common/utils/otp";
+import { otpResendTemplate, otpTemplate } from "../../../common/Templates/registrationTemplates/registration.template";
+import { isDuplicateKeyError } from "../../../common/errors/isDuplicatKeyError";
 class CompanyService implements ICompanyService {
   constructor(private readonly repository: ICompanyRepository,
     private readonly companyAdminRepo: ICompanyAdminRepository,
@@ -117,14 +118,10 @@ class CompanyService implements ICompanyService {
    const hashedPassword=await hashValue(payload.adminPassword)
      const otp=this.otpService.generate()
      const hashedOtp= await hashValue(otp)
-      const now=new Date()
-    const otpExpiresAt=new Date(
-      now.getTime()+OtpValues.expiresInMinutes*60*1000
-    )
-
-    const expiresAt =new Date(
-      now.getTime()+60*60*1000
-    )
+  
+    const otpExpiresAt=getOtpExpiry(OtpValues.expiresInMinutes)
+    
+    const expiresAt =getOtpExpiry(60)
 
     const staging= await this.registrationStaging.create({
      companyName: payload.companyName,
@@ -132,47 +129,18 @@ class CompanyService implements ICompanyService {
         companyEmail: payload.companyEmail,
         companyPhone: payload.companyPhone,
         gstin: payload.gstin,
-
         adminFullName: payload.adminFullName,
         adminEmail: payload.adminEmail,
         adminPassword: hashedPassword,
         adminPhoneNumber: payload.adminPhoneNumber,
-
         otpHash: hashedOtp,
         otpExpiresAt,
-
         otpAttempts: 0,
         emailVerified: false,
-
         expiresAt,
-
     
     })
-    await this.emailService.sendEmail(payload.adminEmail,"Verify your FinScrybe registration",
-      `
-        <div>
-          <h2>FinScrybe Email Verification</h2>
-
-          <p>Hello ${payload.adminFullName},</p>
-
-          <p>
-            Your OTP for completing your FinScrybe company
-            registration is:
-          </p>
-
-          <h1>${otp}</h1>
-
-          <p>
-            This OTP will expire in
-            ${OtpValues.expiresInMinutes} minutes.
-          </p>
-
-          <p>
-            If you did not initiate this registration,
-            you can safely ignore this email.
-          </p>
-        </div>
-      `)
+    await this.emailService.sendEmail(payload.adminEmail,"Verify your FinScrybe registration",otpTemplate(payload.adminFullName,otp,OtpValues.expiresInMinutes))
       return mapRegistrationStartResponse(staging._id.toString(),CompanyRegistrationMessage.REGISTRATION_STARTED_MESSAGE)
 
   }
@@ -200,14 +168,7 @@ class CompanyService implements ICompanyService {
       }
      })
 
-     await this.emailService.sendEmail(staging.adminEmail,"Your new FinScrybe verification OTP", `
-      <div>
-        <h2>FinScrybe Email Verification</h2>
-        <p>Your new OTP is:</p>
-        <h1>${otp}</h1>
-        <p>This OTP will expire in ${OtpValues.expiresInMinutes} minutes.</p>
-      </div>
-    `)
+     await this.emailService.sendEmail(staging.adminEmail,"Your new FinScrybe verification OTP", otpResendTemplate(otp,OtpValues.expiresInMinutes))
    return {
      message:OtpVerificationMessage.OTP_RESENT_MESSAGE
    }
@@ -331,13 +292,6 @@ class CompanyService implements ICompanyService {
   }
 }
 
-const isDuplicateKeyError = (
-  error: unknown
-): error is mongoose.mongo.MongoServerError => {
-  return (
-    error instanceof mongoose.mongo.MongoServerError &&
-    error.code === HttpStatus.MONGOOSE_DUPLICATE_KEY_ERROR
-  );
-};
+
 
 export const companyService = new CompanyService(companyRepository,companyAdminRepository,emailService,otpService,registrationStagingRepository);

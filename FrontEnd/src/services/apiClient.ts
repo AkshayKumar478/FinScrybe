@@ -1,0 +1,68 @@
+
+import { useAuthStore } from "../store/authStore";
+
+export class ApiError extends Error {
+  public readonly status: number;
+  public readonly details?: unknown;
+
+  constructor(message: string, status: number, details?: unknown) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.details = details;
+  }
+}
+
+export const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") ??
+  "http://localhost:5000";
+
+export type RequestOptions = {
+  method?: "GET" | "POST" | "PATCH";
+  body?: unknown;
+  token?: string | null;
+};
+
+const clearAuthenticationOnUnauthorized = (path: string): void => {
+  const auth = useAuthStore.getState();
+
+  if (path.startsWith("/admin") || path.startsWith("/companies")) {
+    auth.logoutSuperAdmin();
+  } else if (path.startsWith("/company-admin")) {
+    auth.logoutCompanyAdmin();
+  } else {
+    auth.logoutClient();
+  }
+};
+
+export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: options.method ?? "GET",
+    credentials:"include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.token
+        ? {
+            Authorization: `Bearer ${options.token}`,
+          }
+        : {}),
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      await clearAuthenticationOnUnauthorized(path);
+    }
+
+    throw new ApiError(
+      data?.message ?? "Request failed",
+      response.status,
+      data?.details
+    );
+  }
+
+  return data as T;
+}
