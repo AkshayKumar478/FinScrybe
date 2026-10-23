@@ -1,8 +1,16 @@
 import { z } from "zod";
 
 export const createInvitationSchema = z.object({
-  email: z.string().email("A valid email is required").trim().toLowerCase(),
-  department: z.string().trim().min(1, "Department is required"),
+  email: z
+    .string()
+    .trim()
+    .email("Please provide a valid email address")
+    .toLowerCase(),
+
+  department: z
+    .string()
+    .trim()
+    .min(1, "Department is required"),
 });
 
 export const resendInvitationParamsSchema = z.object({
@@ -19,3 +27,6 @@ export const acceptInvitationSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   phoneNumber: z.string().trim().min(1, "Phone number is required"),
 });
+
+
+

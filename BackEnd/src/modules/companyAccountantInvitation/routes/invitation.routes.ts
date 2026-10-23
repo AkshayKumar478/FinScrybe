@@ -14,17 +14,15 @@ import {
 const invitationRouter = Router();
 
 invitationRouter.post(
-  "/",
+  "/invitation",
   authMiddleware,
   roleMiddleware(ActorType.COMPANY_ADMIN),
   validateMiddleware({ body: createInvitationSchema }),
-  invitationController.createInvitation.bind(invitationController)
 );
 
 invitationRouter.get(
-  "/validate",
+  "/invitation/validate",
   validateMiddleware({ query: validateInvitationQuerySchema }),
-  invitationController.validateInvitation.bind(invitationController)
 );
 
 invitationRouter.post(
@@ -32,13 +30,11 @@ invitationRouter.post(
   authMiddleware,
   roleMiddleware(ActorType.COMPANY_ADMIN),
   validateMiddleware({ params: resendInvitationParamsSchema }),
-  invitationController.resendInvitation.bind(invitationController)
 );
 
 invitationRouter.post(
   "/accept",
   validateMiddleware({ body: acceptInvitationSchema }),
-  invitationController.acceptInvitation.bind(invitationController)
 );
 
 export default invitationRouter;

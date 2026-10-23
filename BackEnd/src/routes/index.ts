@@ -10,5 +10,6 @@ const router = Router();
 router.use("/admin", adminRoutes);
 router.use("/companies", companyRoutes);
 router.use("/company-admin", companyAdminRoutes);
+router.use('/accountant',)
 
 export default router;

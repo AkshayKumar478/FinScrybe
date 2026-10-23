@@ -112,3 +112,4 @@ class AdminController implements IAdminController {
 }
 
 export const adminController = new AdminController(adminService);
+ 

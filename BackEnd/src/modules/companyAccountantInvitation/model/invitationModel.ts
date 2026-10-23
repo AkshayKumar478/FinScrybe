@@ -1,28 +1,9 @@
 import { Schema, model, models, Document, Types } from "mongoose";
 import {
-  ActorType,
   InvitationStatus,
 } from "../../../common/types/index";
+import {IInvitation} from './invitation.model.interface'
 
-export interface IInvitation extends Document {
-  companyId: Types.ObjectId;
-
-  invitedBy: Types.ObjectId;
-  invitedByType: ActorType;
-
-  email: string;
-
-  department: string;
-
-  token: string;
-
-  status: InvitationStatus;
-
-  expiresAt: Date;
-  acceptedAt?: Date;
-
-  createdAt: Date;
-}
 
 const invitationSchema = new Schema<IInvitation>(
   {
@@ -35,12 +16,6 @@ const invitationSchema = new Schema<IInvitation>(
 
     invitedBy: {
       type: Schema.Types.ObjectId,
-      required: true,
-    },
-
-    invitedByType: {
-      type: String,
-      enum: Object.values(ActorType),
       required: true,
     },
 
@@ -68,11 +43,15 @@ const invitationSchema = new Schema<IInvitation>(
       enum: Object.values(InvitationStatus),
       default: InvitationStatus.PENDING,
     },
+    
 
     expiresAt: {
       type: Date,
       required: true,
     },
+  cancelledAt: {
+  type: Date,
+},
 
     acceptedAt: {
       type: Date,
