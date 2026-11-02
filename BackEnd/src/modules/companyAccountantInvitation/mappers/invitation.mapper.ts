@@ -1,7 +1,10 @@
 
-import {InvitationResponse,InvitationListResponse} from './invitation.mapper.interface'
-import { IInvitation } from '../model/invitation.model.interface';
+import type {
+  InvitationResponse,
+  InvitationListResponse,
+} from "./invitation.mapper.interface";
 
+import type { IInvitation } from "../model/invitation.model.interface";
 
 export const mapInvitation = (
   invitation: IInvitation
@@ -22,9 +25,8 @@ export const mapInvitation = (
 
 export const mapInvitations = (
   invitations: IInvitation[]
-): InvitationResponse[] => {
-  return invitations.map(mapInvitation);
-};
+): InvitationResponse[] =>
+  invitations.map(mapInvitation);
 
 export const mapInvitationList = (
   invitations: IInvitation[],
@@ -36,5 +38,5 @@ export const mapInvitationList = (
   total,
   page,
   limit,
-  totalPages: Math.ceil(total / limit),
+  totalPages: limit > 0 ? Math.ceil(total / limit) : 0,
 });

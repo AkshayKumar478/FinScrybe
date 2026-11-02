@@ -8,11 +8,12 @@ import {
 } from "mongoose";
 export type RepositoryFilter = Record<string, unknown>;
 
-export interface IBaseRepository<TDocument extends Document> {
-
-
+export interface IBaseRepository<
+  TDocument extends Document,
+  TCreateInput = Partial<TDocument>
+> {
   create(
-    payload: Partial<TDocument>,
+    payload: TCreateInput,
     options?: SaveOptions
   ): Promise<TDocument>;
 

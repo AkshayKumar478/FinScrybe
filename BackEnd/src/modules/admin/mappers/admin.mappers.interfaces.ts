@@ -31,3 +31,7 @@ export interface IAdminAuthUser {
   profilePhoto?: string;
   actorType: ActorType.ADMIN;
 }
+export interface CreateInvitationInput {
+  email: string;
+  department: string;
+}

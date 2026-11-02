@@ -29,7 +29,7 @@ export class CompanyRepository
   ): Promise<ICompany | null> {
     return this.findOne({ companyAdminId });
   }
-
+  
   async assignCompanyAdmin(
     companyId: string,
     companyAdminId: string | Types.ObjectId,
@@ -37,7 +37,10 @@ export class CompanyRepository
   ): Promise<ICompany | null> {
     return this.updateById(companyId, { companyAdminId }, options);
   }
+  
 
 }
+
+
 
 export const companyRepository = new CompanyRepository();

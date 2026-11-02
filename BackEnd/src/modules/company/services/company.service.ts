@@ -25,7 +25,7 @@ import {IRegistrationRepository } from '../repositories/registrationStaging.repo
 import {registrationStagingRepository} from '../repositories/registrationStaging.repository'
 import { OtpValues} from "../../../common/constants/constants"
 import { generateRegistrationVerificationToken, verifyRegistrationVerificationToken}from '../../../common/utils/jwt'
-import { getOtpExpiry } from "../../../common/utils/otp";
+import { getExpiry } from "../../../common/utils/otp";
 import { otpResendTemplate, otpTemplate } from "../../../common/Templates/registrationTemplates/registration.template";
 import { isDuplicateKeyError } from "../../../common/errors/isDuplicatKeyError";
 class CompanyService implements ICompanyService {
@@ -119,9 +119,9 @@ class CompanyService implements ICompanyService {
      const otp=this.otpService.generate()
      const hashedOtp= await hashValue(otp)
   
-    const otpExpiresAt=getOtpExpiry(OtpValues.expiresInMinutes)
+    const otpExpiresAt=getExpiry(OtpValues.expiresInMinutes)
     
-    const expiresAt =getOtpExpiry(60)
+    const expiresAt =getExpiry(60)
 
     const staging= await this.registrationStaging.create({
      companyName: payload.companyName,

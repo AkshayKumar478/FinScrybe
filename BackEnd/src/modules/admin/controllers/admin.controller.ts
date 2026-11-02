@@ -84,7 +84,7 @@ class AdminController implements IAdminController {
     res
       .clearCookie("accessToken")
       .clearCookie("refreshToken")
-      .status(200)
+      .status(HttpStatus.OK)
       .json({
         message: SuperAdminMessage.LOGOUT_SUCCESS,
       });

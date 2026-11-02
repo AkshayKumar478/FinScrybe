@@ -1,5 +1,5 @@
 
-export const getOtpExpiry = (
+export const getExpiry = (
   expiresInMinutes: number
 ): Date => {
   return new Date(

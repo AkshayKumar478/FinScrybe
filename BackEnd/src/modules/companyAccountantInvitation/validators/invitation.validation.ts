@@ -28,5 +28,7 @@ export const acceptInvitationSchema = z.object({
   phoneNumber: z.string().trim().min(1, "Phone number is required"),
 });
 
-
-
+export  type createInvitationInput=z.infer< typeof createInvitationSchema>
+export type resendInvitationParams=z.infer<typeof resendInvitationParamsSchema>
+export type validateInvitationQuery=z.infer<typeof validateInvitationQuerySchema>
+export type acceptInvitation=z.infer<typeof acceptInvitationSchema>

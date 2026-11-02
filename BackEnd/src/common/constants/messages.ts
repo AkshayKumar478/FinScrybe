@@ -126,10 +126,15 @@ export enum AccountantMessage {
   INVITATION_EXPIRED = "Accountant invitation has expired",
 
   INVITATION_ALREADY_ACCEPTED =
-    "Accountant invitation has already been accepted",
+     "Accountant invitation has already been accepted",
+  INVITATION_ALREADY_EXISTS =
+    "Accountant invitation already exists",
+  EMAIL_HAS_PENDING_INVITATION_FROM_ANOTHER_COMPANY="Email has a pending invitation from another company ",  
+  ACCOUNTANT_BELONGS_TO_ANOTHER_COMPANY="Accountant belongs to another company ",  
 
   ACCOUNTANT_ALREADY_EXISTS = "An accountant with this email already exists",
   ACCOUNTANT_COMPANY_NOT_LINKED = "Accountant is not linked to a company",
+  ACCOUNTANT_EMAIL_ALREADY_EXISTS="Accountant Email Already exists"
 }
 
 

@@ -9,7 +9,6 @@ export interface IInvitation extends Document {
   companyId: Types.ObjectId;
 
   invitedBy: Types.ObjectId;
-  invitedByType: ActorType;
 
   email: string;
   department: string;

@@ -70,7 +70,11 @@ invitationSchema.index(
   { expiresAt: 1 },
   { expireAfterSeconds: 0 }
 );
-
+invitationSchema.index({
+  companyId:1,
+  email:1,
+   status:1,
+})
 export const Invitation =
   models.Invitation ||
   model<IInvitation>("Invitation", invitationSchema);

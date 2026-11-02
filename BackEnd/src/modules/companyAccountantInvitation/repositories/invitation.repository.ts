@@ -1,18 +1,17 @@
-import { QueryOptions ,Types } from "mongoose";
+import { QueryOptions, Types } from "mongoose";
 
 import { BaseRepository } from "../../../common/base/base.repository";
 import { InvitationStatus } from "../../../common/types";
-import {
-  Invitation,
-} from "../model/invitationModel";
-import {IInvitation} from '../model/invitation.model.interface'
-import { IInvitationRepository}from './invitation.repository.interface'
 
+import { Invitation } from "../model/invitationModel";
+import type { IInvitation } from "../model/invitation.model.interface";
+import type { IInvitationRepository } from "./invitation.repository.interface";
+import type { InvitationCreateInput } from "./invitationCreateInput.repository";
 
 export class InvitationRepository
-  extends BaseRepository<IInvitation>
-  implements IInvitationRepository
-{
+  extends BaseRepository<IInvitation, InvitationCreateInput>
+  implements IInvitationRepository {
+
   constructor() {
     super(Invitation);
   }
@@ -53,8 +52,6 @@ export class InvitationRepository
       {
         token,
         expiresAt,
-        status: InvitationStatus.PENDING,
-        acceptedAt: undefined,
       },
       options
     );
@@ -66,18 +63,14 @@ export class InvitationRepository
     acceptedAt?: Date,
     options: QueryOptions<IInvitation> = { new: true }
   ): Promise<IInvitation | null> {
-    return this.updateById(id, { status, acceptedAt }, options);
-  }
-
-  async deleteExpiredInvitations(
-    date: Date,
-    options?: QueryOptions<IInvitation>
-  ): Promise<number> {
-    const result = await this.deleteMany({
-      expiresAt: { $lte: date },
-    }, options);
-
-    return result.deletedCount ?? 0;
+    return this.updateById(
+      id,
+      {
+        status,
+        ...(acceptedAt && { acceptedAt }),
+      },
+      options
+    );
   }
 }
 

@@ -12,17 +12,22 @@ import type {RepositoryFilter} from './base.repository.interface'
 
 
 
-export class BaseRepository<TDocument extends Document> implements IBaseRepository<TDocument> {
+export class BaseRepository<
+  TDocument extends Document,
+  TCreateInput = Partial<TDocument>
+> implements IBaseRepository<TDocument, TCreateInput> {
+
   constructor(protected readonly model: Model<TDocument>) {}
 
   async create(
-    payload: Partial<TDocument>,
+    payload: TCreateInput,
     options?: SaveOptions
   ): Promise<TDocument> {
     const document = new this.model(payload);
     return document.save(options);
   }
-  
+
+
   async findById(
     id: string,
     projection?: ProjectionType<TDocument>,
