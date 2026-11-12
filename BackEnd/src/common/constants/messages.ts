@@ -90,11 +90,21 @@ export enum CompanyAdminMessage {
   ACCOUNT_INACTIVE = "Company admin account is inactive",
   
 
-  
+  COMPANY_ASSOCIAtION_NOT_fOUND="Company association not found",
   LOGOUT_SUCCESS = "Company admin logout successful",
   LOGOUT_FAILED = "Company admin logout failed",
+
 }
 
+export enum InvitationMessages{
+  
+  INVITATION_NOT_FOUND="Invitation not found",
+  INVALID_OR_EXPIRED_INVITATION="Invitation is invalid or expired",
+  ONLY_PENDING_INVITATIONS_CAN_BE_RESENT="Only pending invitations can be resent",
+  iNVITATION_NO_LONGER_PENDING="Invitation is no longer pending",
+  iNVALID_INVITATION_tOKEN="Invalid invitation token",
+ 
+}
 
 
 // ACCOUNTANT MESSAGES
@@ -134,7 +144,9 @@ export enum AccountantMessage {
 
   ACCOUNTANT_ALREADY_EXISTS = "An accountant with this email already exists",
   ACCOUNTANT_COMPANY_NOT_LINKED = "Accountant is not linked to a company",
-  ACCOUNTANT_EMAIL_ALREADY_EXISTS="Accountant Email Already exists"
+  ACCOUNTANT_EMAIL_ALREADY_EXISTS="Accountant Email Already exists",
+  ACCOUNTANT_EMAIL_SUBJECT="Accountant Invitation",
+  ACCOUNTANT_INACTIVE= "Your accountant account has been deactivated",
 }
 
 

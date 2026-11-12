@@ -8,6 +8,7 @@ import {
   acceptInvitationSchema,
   createInvitationSchema,
   resendInvitationParamsSchema,
+  validateInvitationParamsSchema,
   validateInvitationQuerySchema,
 } from "../validators/invitation.validation";
 
@@ -18,11 +19,7 @@ invitationRouter.post(
   authMiddleware,
   roleMiddleware(ActorType.COMPANY_ADMIN),
   validateMiddleware({ body: createInvitationSchema }),
-);
-
-invitationRouter.get(
-  "/invitation/validate",
-  validateMiddleware({ query: validateInvitationQuerySchema }),
+  invitationController.createAccountantInvitation.bind(invitationController)
 );
 
 invitationRouter.post(
@@ -30,11 +27,31 @@ invitationRouter.post(
   authMiddleware,
   roleMiddleware(ActorType.COMPANY_ADMIN),
   validateMiddleware({ params: resendInvitationParamsSchema }),
+  invitationController.resendInvitation.bind(invitationController)
 );
 
-invitationRouter.post(
-  "/accept",
-  validateMiddleware({ body: acceptInvitationSchema }),
+invitationRouter.delete(
+  "/invitation/:invitationId",
+  authMiddleware,
+  roleMiddleware(ActorType.COMPANY_ADMIN),
+  validateMiddleware({ params: resendInvitationParamsSchema }),
+  invitationController.cancelInvitation.bind(invitationController)
+);
+
+invitationRouter.get(
+  "/invitation/:invitationId/validate",
+  validateMiddleware({
+    params: validateInvitationParamsSchema,
+    query: validateInvitationQuerySchema,
+  }),
+  invitationController.validateInvitation.bind(invitationController)
+);
+
+invitationRouter.get(
+  "/invitations",
+  authMiddleware,
+  roleMiddleware(ActorType.COMPANY_ADMIN),
+  invitationController.listCompanyInvitations.bind(invitationController)
 );
 
 export default invitationRouter;

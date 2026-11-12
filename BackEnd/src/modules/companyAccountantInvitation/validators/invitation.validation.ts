@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export const createInvitationSchema = z.object({
@@ -14,7 +15,11 @@ export const createInvitationSchema = z.object({
 });
 
 export const resendInvitationParamsSchema = z.object({
-  invitationId: z.string().min(1, "Invitation id is required"),
+  invitationId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid invitation ID"),
+});
+
+export const validateInvitationParamsSchema = z.object({
+  invitationId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid invitation ID"),
 });
 
 export const validateInvitationQuerySchema = z.object({
@@ -28,7 +33,8 @@ export const acceptInvitationSchema = z.object({
   phoneNumber: z.string().trim().min(1, "Phone number is required"),
 });
 
-export  type createInvitationInput=z.infer< typeof createInvitationSchema>
-export type resendInvitationParams=z.infer<typeof resendInvitationParamsSchema>
-export type validateInvitationQuery=z.infer<typeof validateInvitationQuerySchema>
-export type acceptInvitation=z.infer<typeof acceptInvitationSchema>
+export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;
+export type ResendInvitationParams = z.infer<typeof resendInvitationParamsSchema>;
+export type ValidateInvitationParams = z.infer<typeof validateInvitationParamsSchema>;
+export type ValidateInvitationQuery = z.infer<typeof validateInvitationQuerySchema>;
+export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;

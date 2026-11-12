@@ -20,3 +20,17 @@ export interface CreateInvitationInput {
   email: string;
   department: string;
 }
+
+export interface InvitationValidationResponse {
+  invitationId: string;
+  email: string;
+  department: string;
+  expiresAt: Date;
+}
+
+export interface InvitationValidationResponse {
+  invitationId: string;
+  email: string;
+  department: string;
+  expiresAt: Date;
+}

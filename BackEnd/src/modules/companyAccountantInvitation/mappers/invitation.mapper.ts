@@ -5,6 +5,7 @@ import type {
 } from "./invitation.mapper.interface";
 
 import type { IInvitation } from "../model/invitation.model.interface";
+import { InvitationValidationResponse } from "./invitation.mapper.interface";
 
 export const mapInvitation = (
   invitation: IInvitation
@@ -39,4 +40,12 @@ export const mapInvitationList = (
   page,
   limit,
   totalPages: limit > 0 ? Math.ceil(total / limit) : 0,
+});
+export const mapInvitationValidation = (
+  invitation: IInvitation
+): InvitationValidationResponse => ({
+  invitationId: invitation._id.toString(),
+  email: invitation.email,
+  department: invitation.department,
+  expiresAt: invitation.expiresAt,
 });

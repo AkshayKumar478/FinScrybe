@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import {
   accessTokenCookieOptions,
@@ -6,39 +6,34 @@ import {
 } from "../../../common/utils/cookies";
 import {
   companyAdminService,
-  ICompanyAdminService,
 } from "../services/companyAdmin.service";
+import { ICompanyAdminController } from "./companyAdmin.controller.interface";
+import { ICompanyAdminService } from "../services/companyAdmin.service";
+import { HttpStatus } from "../../../common/constants/httpstatus";
 
-export interface ICompanyAdminController {
-  login(req: Request, res: Response, next: NextFunction): Promise<void>;
-  logout(req: Request, res: Response, next: NextFunction): Promise<void>;
-}
+
 
 class CompanyAdminController implements ICompanyAdminController {
   constructor(private readonly service: ICompanyAdminService) {}
 
-  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
+  async login(req: Request, res: Response,): Promise<void> {
+   
       const response = await this.service.login(req.body);
 
       res
         .cookie("accessToken", response.accessToken, accessTokenCookieOptions)
         .cookie("refreshToken", response.refreshToken, refreshTokenCookieOptions)
-        .status(200)
+        .status(HttpStatus.OK)
         .json({ message: response.message, user: response.user });
-    } catch (error) {
-      next(error);
-    }
+  
   }
 
-  async logout(_req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
+  async logout(_req: Request, res: Response): Promise<void> {
+   
       res.clearCookie("accessToken").clearCookie("refreshToken").status(200).json({
         message: "Logout successful",
       });
-    } catch (error) {
-      next(error);
-    }
+    
   }
 }
 

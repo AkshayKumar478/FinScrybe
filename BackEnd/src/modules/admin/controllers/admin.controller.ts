@@ -17,9 +17,9 @@ class AdminController implements IAdminController {
   async login(
     req: Request,
     res: Response,
-    next: NextFunction
+
   ): Promise<void> {
-    try {
+
       const response = await this.adminService.login(req.body)
      res.cookie(
         "accessToken",
@@ -37,17 +37,14 @@ class AdminController implements IAdminController {
         user: response.user,
       });
 
-    } catch (error) {
-      next(error);
-    }
+   
   }
 
  async refreshToken(
   req: Request,
   res: Response,
-  next: NextFunction
 ): Promise<void> {
-  try {
+
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
@@ -71,16 +68,13 @@ class AdminController implements IAdminController {
       .json({
         message: JwtMessage.Token_REFRESHED,
       });
-  } catch (error) {
-    next(error);
-  }
+
  }
   async logout(
   _req: Request,
   res: Response,
-  next: NextFunction
 ): Promise<void> {
-  try {
+
     res
       .clearCookie("accessToken")
       .clearCookie("refreshToken")
@@ -88,26 +82,21 @@ class AdminController implements IAdminController {
       .json({
         message: SuperAdminMessage.LOGOUT_SUCCESS,
       });
-  } catch (error) {
-    next(error);
-  }
+  
 }
 
   async getCurrentAdmin(
     req: Request,
     res: Response,
-    next: NextFunction
   ): Promise<void> {
-    try {
+
       if (!req.user?.id) {
         throw new UnauthorizedError(JwtMessage.AUTHENTICATION_REQUIRED);
       }
 
       const user = await this.adminService.getCurrentAdmin(req.user.id);
       res.status(HttpStatus.OK).json({ user });
-    } catch (error) {
-      next(error);
-    }
+
   }
 }
 

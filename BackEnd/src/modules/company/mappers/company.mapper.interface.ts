@@ -26,6 +26,7 @@ export interface CompanyRegistrationResponse {
   company: AuthCompanyResponse;
   companyAdmin: {
     id: string;
+    companyId:String
     fullName: string;
     email: string;
     phoneNumber: string;

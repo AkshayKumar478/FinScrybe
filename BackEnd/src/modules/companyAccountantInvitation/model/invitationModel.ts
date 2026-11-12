@@ -72,9 +72,9 @@ invitationSchema.index(
 );
 invitationSchema.index({
   companyId:1,
-  email:1,
-   status:1,
-})
+  email:1},{unique:true,partialFilterExpression:{
+    status:InvitationStatus.PENDING
+  }})
 export const Invitation =
   models.Invitation ||
   model<IInvitation>("Invitation", invitationSchema);

@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { authMiddleware } from "../../../common/middlewares/auth.middleware";
-import { roleMiddleware } from "../../../common/middlewares/role.middleware";
-import { validateMiddleware } from "../../../common/middlewares/validate.middleware";
-import { ActorType } from "../../../common/types";
+
 import { accountantController } from "../controllers/accountant.controller";
+
+import { validateMiddleware } from "../../../common/middlewares/validate.middleware";
+import { authMiddleware } from "../../admin/middlewares/adminAuthMiddleware";
+import { roleMiddleware } from "../../../common/middlewares/role.middleware";
+import { ActorType } from "../../../common/types";
+
 import {
-  accountantIdParamsSchema,
-  companyIdParamsSchema,
-  updateAccountantStatusSchema,
+  acceptInvitationSchema,
+  accountantLoginSchema,
 } from "../validators/accountant.validation";
 
 const accountantRouter = Router();
-
-
 accountantRouter.get(
   "/my-company",
   authMiddleware,
@@ -20,23 +20,21 @@ accountantRouter.get(
   accountantController.listMyCompany.bind(accountantController)
 );
 
-accountantRouter.get(
-  "/company/:companyId",
-  authMiddleware,
-  roleMiddleware(ActorType.ADMIN, ActorType.COMPANY_ADMIN),
-  validateMiddleware({ params: companyIdParamsSchema }),
-  accountantController.listByCompany.bind(accountantController)
+accountantRouter.post(
+  "/accept-invitation",
+  validateMiddleware({ body: acceptInvitationSchema }),
+  accountantController.acceptInvitation.bind(accountantController)
 );
 
-accountantRouter.patch(
-  "/:accountantId/status",
-  authMiddleware,
-  roleMiddleware(ActorType.ADMIN, ActorType.COMPANY_ADMIN),
-  validateMiddleware({
-    params: accountantIdParamsSchema,
-    body: updateAccountantStatusSchema,
-  }),
-  accountantController.updateStatus.bind(accountantController)
+accountantRouter.post(
+  "/login",
+  validateMiddleware({ body: accountantLoginSchema }),
+  accountantController.login.bind(accountantController)
+);
+
+accountantRouter.post(
+  "/logout",
+  accountantController.logout.bind(accountantController)
 );
 
 export default accountantRouter;

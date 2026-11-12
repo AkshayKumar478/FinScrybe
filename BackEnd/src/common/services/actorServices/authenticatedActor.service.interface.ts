@@ -1,9 +1,9 @@
 import { ActorType } from "../../types";
 
 import { ICompanyAdmin } from "../../../modules/companyAdmin/model/model";
-import { IAccountant } from "../../../modules/companyAccountant/model/accountantModel";
+import { IAccountant } from "../../../modules/companyAccountant/model/accountant.model.interface";
 import { IAdmin } from "../../../modules/admin/model/admin.model.interface";
-
+import { AuthenticatedActorContext } from "../../contracts/actorContracts";
 
 
 export type AuthActor = IAdmin | ICompanyAdmin | IAccountant;
@@ -18,4 +18,8 @@ export interface IAuthenticatedActorService {
     actorType: ActorType,
     actorId: string
   ): Promise<AuthActor | null>;
+  getAuthenticatedActor(
+    actorType: ActorType,
+    actorId: string
+  ): Promise<AuthenticatedActorContext | null>;
 }

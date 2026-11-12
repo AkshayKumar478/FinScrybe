@@ -3,37 +3,10 @@ import { QueryOptions, SaveOptions, Types } from "mongoose";
 import { BaseRepository } from "../../../common/base/base.repository";
 import {
   Accountant,
-  IAccountant,
-} from "../model/accountantModel";
+} from "../model/accountant.model";
+import { IAccountant } from "../model/accountant.model.interface";
+import { IAccountantRepository } from "./accountant.repository.interface";
 
-export interface IAccountantRepository {
-  create(
-    payload: Partial<IAccountant>,
-    options?: SaveOptions
-  ): Promise<IAccountant>;
-  findById(id: string): Promise<IAccountant | null>;
-  findByEmail(email: string): Promise<IAccountant | null>;
-  findByEmailWithPassword(
-    email: string
-  ): Promise<IAccountant | null>;
-  findByCompanyId(
-    companyId: string | Types.ObjectId
-  ): Promise<IAccountant[]>;
-  findAll(): Promise<IAccountant[]>;
-  updateLastLogin(
-    id: string,
-    lastLogin: Date
-  ): Promise<IAccountant | null>;
-  setActiveStatus(
-    id: string,
-    isActive: boolean
-  ): Promise<IAccountant | null>;
-  updateById(
-    id: string,
-    update: Partial<IAccountant>,
-    options?: QueryOptions<IAccountant>
-  ): Promise<IAccountant | null>;
-}
 
 export class AccountantRepository
   extends BaseRepository<IAccountant>

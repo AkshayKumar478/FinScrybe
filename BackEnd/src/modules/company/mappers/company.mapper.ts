@@ -1,10 +1,10 @@
 import { ICompany } from "../model/model.interface";
 import { ICompanySummary } from "../contracts";
-import { IActiveActor } from "../../../common/contracts/actorContracts";
 import {CompanyDto,CompanyRegistrationResponse,AuthCompanyResponse,RegistrationStartResponse} from './company.mapper.interface'
 import {CompanyRegistrationMessage} from '../../../common/constants/messages'
 import {ICompanyRegistrationStaging} from '../model/registrationStaging.model.interface'
 import  {ICompanyRegistrationPayload} from '../contracts'
+import type { ICompanyAdmin } from "../../companyAdmin/model/model";
 
 
 export function mapCompany(company: ICompany): CompanyDto {
@@ -43,13 +43,14 @@ export function mapRegistrationStartResponse(
 
 export function mapCompanyRegistrationResponse(
   company: ICompanySummary,
-  companyAdmin: IActiveActor
+  companyAdmin: ICompanyAdmin
 ): CompanyRegistrationResponse {
   return {
     message: CompanyRegistrationMessage.REGISTRATION_SUCCESS,
     company: mapCompanySummary(company),
     companyAdmin: {
       id: companyAdmin._id.toString(),
+      companyId: companyAdmin.companyId.toString(),
       fullName: companyAdmin.fullName,
       email: companyAdmin.email,
       phoneNumber: companyAdmin.phoneNumber,
